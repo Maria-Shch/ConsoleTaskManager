@@ -1,5 +1,6 @@
 package ru.shcherbatykh.utils;
 
+import java.util.Date;
 import java.util.Scanner;
 
 public class CommandUtils {
@@ -31,6 +32,16 @@ public class CommandUtils {
             }
         }
         return str;
+    }
+
+    public static Date checkDateNotPassed(Date date) {
+        Date dateNow = new Date();
+        if (dateNow.before(date)) {
+            return date;
+        } else {
+            System.out.println("Вы ввели дату и время, которые уже прошли.");
+            return null;
+        }
     }
 
     public static void waitActionFromUser() {
