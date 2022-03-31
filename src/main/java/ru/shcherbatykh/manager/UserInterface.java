@@ -3,9 +3,9 @@ package ru.shcherbatykh.manager;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.shcherbatykh.utils.CommandUtils;
 
 //вывод на консоль команд
 //оповещение пользователя через swing, звук, запуск другой программы-оповещения
@@ -16,8 +16,6 @@ public class UserInterface {
     Manager manager;
     @Autowired
     Printer printer;
-
-    private static final Scanner in = new Scanner(System.in).useDelimiter("\n");
 
     public void startMenu() throws Exception {
         boolean flag = true;
@@ -30,7 +28,7 @@ public class UserInterface {
         while (flag) {
             System.out.println(menu);
             System.out.println("Введите пункт меню:");
-            int menuSelect = checkInt();
+            int menuSelect = CommandUtils.checkInt();
 
             switch (menuSelect) {
                 case 1 -> {
@@ -46,13 +44,13 @@ public class UserInterface {
                 }
                 case 4 -> {
                     flag = false;
-                    in.close();
+                    CommandUtils.exit();
                 }
                 default ->
                         System.out.println("Такой пункт в меню отсутвствует, попробуйте снова...\n");
             }
             if (flag) {
-                waitActionFromUser();
+                CommandUtils.waitActionFromUser();
             }
         }
     }
@@ -61,18 +59,18 @@ public class UserInterface {
         System.out.println("Добавление задачи...");
 
         System.out.println("Введите название новой задачи:");
-        String title = checkString();
+        String title = CommandUtils.checkString();
 
         System.out.println("Введите описание новой задачи:");
-        String description = checkString();
+        String description = CommandUtils.checkString();
 
         Date date = null;
         while (date == null) {
             System.out.println("Введите дату новой задачи в формате дд.мм.гггг:");
-            String dateStr = checkString();
+            String dateStr = CommandUtils.checkString();
 
             System.out.println("Введите время новой задачи в формате чч:мм:");
-            String timeStr = checkString();
+            String timeStr = CommandUtils. checkString();
             date = getDate(dateStr, timeStr);
             if (date != null) {
                 date = checkDateNotPassed(date);
@@ -80,7 +78,7 @@ public class UserInterface {
         }
 
         System.out.println("Введите контактные данные:");
-        String contactDetails = checkString();
+        String contactDetails = CommandUtils.checkString();
 
         if (manager.addTask(title, description, date, contactDetails)) {
             System.out.println("Задача успешно добавлена");
@@ -108,7 +106,7 @@ public class UserInterface {
         } else {
             System.out.println("Удаление задачи...");
             System.out.println("Введите номер задачи:");
-            int numberOfTask = checkInt();
+            int numberOfTask = CommandUtils.checkInt();
             int indexOfTask = numberOfTask - 1;
             if (manager.isPresentTaskByNumber(numberOfTask)) {
                 if (manager.removeTask(indexOfTask)) {
@@ -123,34 +121,6 @@ public class UserInterface {
         manager.saveListTaskToFile();
     }
 
-    private int checkInt() {
-        int val;
-        while (true) {
-            if (in.hasNextInt()) {
-                val = in.nextInt();
-                break;
-            } else {
-                in.nextLine();
-                System.out.println("Требуется значение типа int, попробуйте снова...");
-            }
-        }
-        return val;
-    }
-
-    private String checkString() {
-        String str;
-        while (true) {
-            if (in.hasNext()) {
-                str = in.next();
-                break;
-            } else {
-                in.nextLine();
-                System.out.println("Требуется String значение, попробуйте снова...");
-            }
-        }
-        return str;
-    }
-
     private Date checkDateNotPassed(Date date) {
         Date dateNow = new Date();
         if (dateNow.before(date)) {
@@ -159,11 +129,5 @@ public class UserInterface {
             System.out.println("Вы ввели дату и время, которые уже прошли.");
             return null;
         }
-    }
-
-    private void waitActionFromUser() {
-        System.out.println("Нажмите Enter чтобы продолжить...");
-        in.next();
-        in.nextLine();
     }
 }
