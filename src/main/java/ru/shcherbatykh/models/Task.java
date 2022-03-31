@@ -20,16 +20,18 @@ public class Task {
         this.contactDetails = contactDetails;
     }
 
+    //Геттеры полей нужны для работы библиотеки json-simple
     public String getTitle() {
         return title;
     }
-
     public String getDescription() {
         return description;
     }
-
-    public Date getDate() {
+    public Date getNotificationDate() {
         return notificationDate;
+    }
+    public String getContactDetails() {
+        return contactDetails;
     }
 
     public String getDateForPrint() {
@@ -37,12 +39,8 @@ public class Task {
         return dateFormat.format(notificationDate);
     }
 
-    public String getContactDetails() {
-        return contactDetails;
-    }
-
     @Override
     public String toString() {
-        return "{\"title\":\"" + title + "\", \"description\":\"" + description + "\", \"date\":\"" + notificationDate.getTime() + "\", \"contactDetails\":\"" + contactDetails + "\"}";
+        return "{\"title\":\"" + title + "\", \"description\":\"" + description + "\", \"notificationDate\":\"" + notificationDate.getTime() + "\", \"contactDetails\":\"" + contactDetails + "\"}";
     }
 }
