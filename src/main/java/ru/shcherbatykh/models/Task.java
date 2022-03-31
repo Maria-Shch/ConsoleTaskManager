@@ -1,4 +1,4 @@
-package ru.shcherbatykh.manager;
+package ru.shcherbatykh.models;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,16 +7,16 @@ public class Task {
 
     private String title;
     private String description;
-    private Date date;
+    private Date notificationDate;
     private String contactDetails;
 
     public Task() {
     }
 
-    public Task(String title, String description, Date date, String contactDetails) {
+    public Task(String title, String description, Date notificationDate, String contactDetails) {
         this.title = title;
         this.description = description;
-        this.date = date;
+        this.notificationDate = notificationDate;
         this.contactDetails = contactDetails;
     }
 
@@ -29,12 +29,12 @@ public class Task {
     }
 
     public Date getDate() {
-        return date;
+        return notificationDate;
     }
 
     public String getDateForPrint() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy 'в' HH:mm");
-        return dateFormat.format(date);
+        return dateFormat.format(notificationDate);
     }
 
     public String getContactDetails() {
@@ -43,6 +43,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "{\"title\":\"" + title + "\", \"description\":\"" + description + "\", \"date\":\"" + date.getTime() + "\", \"contactDetails\":\"" + contactDetails + "\"}";
+        return "{\"title\":\"" + title + "\", \"description\":\"" + description + "\", \"date\":\"" + notificationDate.getTime() + "\", \"contactDetails\":\"" + contactDetails + "\"}";
     }
 }

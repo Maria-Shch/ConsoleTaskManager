@@ -3,6 +3,7 @@ package ru.shcherbatykh.manager;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import ru.shcherbatykh.models.Task;
 
 @Component
 @Qualifier

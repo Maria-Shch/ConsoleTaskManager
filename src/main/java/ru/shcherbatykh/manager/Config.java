@@ -13,6 +13,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import ru.shcherbatykh.models.Task;
 
 @Configuration
 @ComponentScan(basePackages = "ru.shcherbatykh.manager")
