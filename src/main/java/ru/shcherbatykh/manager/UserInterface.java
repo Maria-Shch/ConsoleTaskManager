@@ -10,14 +10,14 @@ import ru.shcherbatykh.utils.CommandUtils;
 @Component
 public class UserInterface {
 
-    @Autowired
-    Manager manager;
-
-    @Autowired
     Map<Integer, Action> actions;
+    StringBuilder menu;
 
     @Autowired
-    StringBuilder menu;
+    public UserInterface(Map<Integer, Action> actions, StringBuilder menu) {
+        this.actions = actions;
+        this.menu = menu;
+    }
 
     public void startMenu() throws Exception {
         boolean flag = true;
