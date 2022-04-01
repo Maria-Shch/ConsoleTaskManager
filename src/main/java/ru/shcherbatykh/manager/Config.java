@@ -24,7 +24,7 @@ public class Config {
 
     @Bean
     public List<Task> getListTasks() throws Exception {
-        JSONObject jsonObject = (JSONObject) readJsonFromFile(PATH);
+        JSONObject jsonObject = (JSONObject) CommandUtils.readJsonFromFile(PATH);
         ObjectMapper objectMapper = new ObjectMapper();
         List<Task> tasks = new ArrayList<>();
         if (jsonObject != null && !jsonObject.isEmpty()) {
@@ -66,7 +66,7 @@ public class Config {
 
                     System.out.println("Введите время новой задачи в формате чч:мм:");
                     String timeStr = CommandUtils.checkString();
-                    date = getDate(dateStr, timeStr);
+                    date = CommandUtils.getDateAfterProcessing(dateStr, timeStr);
                     if (date != null) {
                         date = CommandUtils.checkDateNotPassed(date);
                     }
@@ -149,37 +149,5 @@ public class Config {
     @Bean
     public Printer getPrinter(){
         return new PrinterImpl();
-    }
-
-    private Date getDate(String dateStr, String timeStr) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        dateFormat.setLenient(false);
-        String dateAndTimeForParse = dateStr + " " + timeStr;
-        Date date = null;
-
-        try {
-            date = dateFormat.parse(dateAndTimeForParse);
-        } catch (java.text.ParseException ex) {
-            date = null;
-            System.out.println("Дата или время были введены неверно");
-        }
-        return date;
-    }
-
-    private static Object readJsonFromFile(String filename) throws FileNotFoundException, IOException {
-        FileReader reader = null;
-        try {
-            reader = new FileReader(filename);
-        } catch (FileNotFoundException ex) {
-            File file = new File(filename);
-            file.createNewFile();
-        }
-        reader = new FileReader(filename);
-        JSONParser jsonParser = new JSONParser();
-        try {
-            return jsonParser.parse(reader);
-        } catch (ParseException | IOException ex) {
-            return null;
-        }
     }
 }
