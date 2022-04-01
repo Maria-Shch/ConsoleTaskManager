@@ -6,11 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
+import java.util.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -52,7 +48,9 @@ public class Config {
 
     @Bean
     public Action addingTask(Manager manager){
-        return (() -> {
+        return new ActionImpl("Добавить задачу") {
+            @Override
+            public boolean execute() throws Exception {
                 System.out.println("Добавление задачи...");
 
                 System.out.println("Введите название новой задачи:");
@@ -74,7 +72,7 @@ public class Config {
                     }
                 }
 
-            System.out.println("FВведите контактные данные:");
+                System.out.println("Введите контактные данные:");
                 String contactDetails = CommandUtils.checkString();
 
                 if (manager.addTask(title, description, date, contactDetails)) {
@@ -82,12 +80,15 @@ public class Config {
                 }
                 manager.saveListTaskToFile();
                 return true;
-        });
+            }
+        };
     }
 
     @Bean
     public Action removingTask(Manager manager){
-        return (() -> {
+        return new ActionImpl("Удалить задачу") {
+            @Override
+            public boolean execute() throws Exception {
                 if (manager.isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 } else {
@@ -107,23 +108,42 @@ public class Config {
                 }
                 manager.saveListTaskToFile();
                 return true;
-        });
+            }
+        };
     }
 
     @Bean
     public Action printTasks(Manager manager){
-        return (() -> {
+        return new ActionImpl("Вывести список задач") {
+            @Override
+            public boolean execute() throws Exception {
                 getPrinter().printListTask(manager.getListTasks());
                 return true;
-        });
+            }
+        };
     }
 
     @Bean
     public Action exit(){
-        return (() -> {
+        return new ActionImpl("Выйти") {
+            @Override
+            public boolean execute() throws Exception {
                 CommandUtils.exit();
                 return false;
-        });
+            }
+        };
+    }
+
+    @Bean
+    public StringBuilder getMenu(Manager manager){
+        StringBuilder menu = new StringBuilder();
+        Set<Integer> keys = getMapActions(manager).keySet();
+        for (int i = 1; i <= keys.size(); i++) {
+            menu.append(i + " - " + getMapActions(manager).get(i).getNameCommandOfAction() + "\n");
+        }
+        menu.append("\n");
+        menu.append("Введите пункт меню:");
+        return menu;
     }
 
     @Bean
