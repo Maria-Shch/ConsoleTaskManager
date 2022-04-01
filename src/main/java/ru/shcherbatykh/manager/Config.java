@@ -52,8 +52,7 @@ public class Config {
 
     @Bean
     public Action addingTask(Manager manager){
-        return new Action(){
-            public boolean execute() throws Exception {
+        return (() -> {
                 System.out.println("Добавление задачи...");
 
                 System.out.println("Введите название новой задачи:");
@@ -75,7 +74,7 @@ public class Config {
                     }
                 }
 
-                System.out.println("Введите контактные данные:");
+            System.out.println("FВведите контактные данные:");
                 String contactDetails = CommandUtils.checkString();
 
                 if (manager.addTask(title, description, date, contactDetails)) {
@@ -83,14 +82,12 @@ public class Config {
                 }
                 manager.saveListTaskToFile();
                 return true;
-            }
-        };
+        });
     }
 
     @Bean
     public Action removingTask(Manager manager){
-        return new Action(){
-            public boolean execute() throws Exception {
+        return (() -> {
                 if (manager.isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 } else {
@@ -110,28 +107,23 @@ public class Config {
                 }
                 manager.saveListTaskToFile();
                 return true;
-            }
-        };
+        });
     }
 
     @Bean
     public Action printTasks(Manager manager){
-        return new Action(){
-            public boolean execute() {
+        return (() -> {
                 getPrinter().printListTask(manager.getListTasks());
                 return true;
-            }
-        };
+        });
     }
 
     @Bean
     public Action exit(){
-        return new Action(){
-            public boolean execute() {
+        return (() -> {
                 CommandUtils.exit();
                 return false;
-            }
-        };
+        });
     }
 
     @Bean
