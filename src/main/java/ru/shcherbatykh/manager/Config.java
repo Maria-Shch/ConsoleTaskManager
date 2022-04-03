@@ -44,7 +44,12 @@ public class Config {
 
     @Bean
     public Action addingTask(Manager manager) {
-        return new ActionImpl("Добавить задачу") {
+        return new Action() {
+            @Override
+            public String getNameCommandOfAction() {
+                return "Добавить задачу";
+            }
+
             @Override
             public boolean execute() throws Exception {
                 System.out.println("Добавление задачи...");
@@ -81,9 +86,13 @@ public class Config {
 
     @Bean
     public Action removingTask(Manager manager){
-        return new ActionImpl("Удалить задачу") {
+        return new Action() {
             @Override
-            public boolean execute() throws Exception {
+            public String getNameCommandOfAction() {
+                return "Удалить задачу";
+            }
+            @Override
+            public boolean execute(){
                 if (manager.isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 } else {
@@ -108,9 +117,13 @@ public class Config {
 
     @Bean
     public Action printTasks(Manager manager){
-        return new ActionImpl("Вывести список задач") {
+        return new Action() {
             @Override
-            public boolean execute() throws Exception {
+            public String getNameCommandOfAction() {
+                return "Вывести список задач";
+            }
+            @Override
+            public boolean execute(){
                 getPrinter().printListTask(manager.getListTasks());
                 return true;
             }
@@ -119,9 +132,13 @@ public class Config {
 
     @Bean
     public Action exit(){
-        return new ActionImpl("Выйти") {
+        return new Action() {
             @Override
-            public boolean execute() throws Exception {
+            public String getNameCommandOfAction() {
+                return "Выйти";
+            }
+            @Override
+            public boolean execute(){
                 CommandUtils.exit();
                 return false;
             }
