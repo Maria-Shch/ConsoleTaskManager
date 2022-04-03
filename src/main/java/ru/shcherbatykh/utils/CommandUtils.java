@@ -2,6 +2,8 @@ package ru.shcherbatykh.utils;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -76,7 +78,30 @@ public class CommandUtils {
         return date;
     }
 
-    public static Object readJsonFromFile(String filename) throws FileNotFoundException, IOException {
+    public static Date getNewDateAfterUserChoice(Date previousNotificationDate, JComboBox box) {
+        String item = (String)box.getSelectedItem();
+
+        switch(item){
+            case "Не откладывать":
+                return new Date(previousNotificationDate.getTime());
+            case "Отложить на 1 минуту":
+                return new Date(previousNotificationDate.getTime()+(60*1000));
+            case "Отложить на 5 минут":
+                return new Date(previousNotificationDate.getTime()+(5*60*1000));
+            case "Отложить на 10 минут":
+                return new Date(previousNotificationDate.getTime()+(10*60*1000));
+            case "Отложить на 30 минут":
+                return new Date(previousNotificationDate.getTime()+(30*60*1000));
+            case "Отложить на 45 минут":
+                return new Date(previousNotificationDate.getTime()+(45*60*1000));
+            case "Отложить на час":
+                return new Date(previousNotificationDate.getTime()+(60*60*1000));
+            default:
+                throw new RuntimeException();
+        }
+    }
+
+    public static Object readJsonFromFile(String filename) throws IOException {
         FileReader reader = null;
         try {
             reader = new FileReader(filename);

@@ -10,19 +10,25 @@ import ru.shcherbatykh.utils.CommandUtils;
 @Component
 public class UserInterface {
 
+    Manager manager;
     Map<Integer, Action> actions;
     StringBuilder menu;
+    UserNotificationController userNotificationController;
 
     @Autowired
-    public UserInterface(Map<Integer, Action> actions, StringBuilder menu) {
+    public UserInterface(Manager manager, Map<Integer, Action> actions, StringBuilder menu, UserNotificationController userNotificationController) {
+        this.manager = manager;
         this.actions = actions;
         this.menu = menu;
+        this.userNotificationController = userNotificationController;
     }
 
     public void startMenu() throws Exception {
         boolean flag = true;
 
         while (flag) {
+            userNotificationController.run();
+
             System.out.println(menu);
             int menuSelect = CommandUtils.checkInt();
 

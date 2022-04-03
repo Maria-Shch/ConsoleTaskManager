@@ -1,7 +1,9 @@
 package ru.shcherbatykh.manager;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.json.simple.JSONObject;
@@ -27,6 +29,7 @@ import ru.shcherbatykh.models.Task;
 public class ManagerImpl implements Manager{
     @Autowired
     private List<Task> listTasks;
+    private List<Task> listScheduledTasks = new ArrayList<>();
 
     @Override
     public List<Task> getListTasks() {
@@ -34,13 +37,29 @@ public class ManagerImpl implements Manager{
     }
 
     @Override
-    public boolean addTask(String title, String description, Date date, String contactDetails){
-        return listTasks.add(new Task(title, description, date, contactDetails));
+    public List<Task> getListScheduledTasks() {
+        return listScheduledTasks;
     }
 
     @Override
-    public boolean removeTask(int indexTask){
-        return listTasks.remove(indexTask) != null;
+    public boolean addTask(String title, String description, Date date, String contactDetails){
+        boolean isSuccessful = listTasks.add(new Task(title, description, date, contactDetails));
+        saveListTaskToFile();
+        return isSuccessful;
+    }
+
+    @Override
+    public boolean removeTask(int indexTask) {
+        boolean isSuccessful = listTasks.remove(indexTask) != null;
+        saveListTaskToFile();
+        return isSuccessful;
+    }
+
+    @Override
+    public boolean removeTask(Task task) {
+        boolean isSuccessful = listTasks.remove(task);
+        saveListTaskToFile();
+        return isSuccessful;
     }
 
     @Override
@@ -49,16 +68,32 @@ public class ManagerImpl implements Manager{
     }
 
     @Override
-    public void saveListTaskToFile() throws Exception {
+    public void updateNotificationDate(Task task, Date newDate){
+        listTasks.remove(task);
+        listTasks.add(new Task(task.getTitle(), task.getDescription(), newDate, task.getContactDetails()));
+        saveListTaskToFile();
+    }
+
+    @Override
+    public void saveListTaskToFile(){
         JSONObject jsonObj = new JSONObject();
         for (int i = 0; i < getListTasks().size(); i++) {
             jsonObj.put(i, getListTasks().get(i));
         }
-        Files.write(Paths.get(Config.PATH), jsonObj.toJSONString().getBytes());
+        try {
+            Files.write(Paths.get(Config.PATH), jsonObj.toJSONString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean isPresentTaskByNumber(int numberOfTask){
         return numberOfTask <= listTasks.size() && numberOfTask > 0;
+    }
+
+    @Override
+    public boolean addTaskToListScheduledTasks(Task task) {
+        return listScheduledTasks.add(task);
     }
 }

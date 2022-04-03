@@ -1,23 +1,19 @@
 package ru.shcherbatykh.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import ru.shcherbatykh.models.Task;
 import ru.shcherbatykh.utils.CommandUtils;
+import ru.shcherbatykh.utils.NotificationFrame;
 
 @Configuration
 @ComponentScan(basePackages = "ru.shcherbatykh.manager")
+//@PropertySource("src/main/resources/taskManager.properties")
 public class Config {
 
     static final String PATH = "src/main/resources/tasks.json";
@@ -47,7 +43,7 @@ public class Config {
     }
 
     @Bean
-    public Action addingTask(Manager manager){
+    public Action addingTask(Manager manager) {
         return new ActionImpl("Добавить задачу") {
             @Override
             public boolean execute() throws Exception {
@@ -78,7 +74,6 @@ public class Config {
                 if (manager.addTask(title, description, date, contactDetails)) {
                     System.out.println("Задача успешно добавлена");
                 }
-                manager.saveListTaskToFile();
                 return true;
             }
         };
@@ -106,7 +101,6 @@ public class Config {
                         System.out.println("Задачи под таким номер не существует.");
                     }
                 }
-                manager.saveListTaskToFile();
                 return true;
             }
         };
@@ -149,5 +143,16 @@ public class Config {
     @Bean
     public Printer getPrinter(){
         return new PrinterImpl();
+    }
+
+    @Bean
+    @Scope("prototype")
+    public NotificationFrame notificationFrame(){
+        return new NotificationFrame();
+    }
+
+    @Bean
+    public Timer getTimer(){
+        return new Timer();
     }
 }

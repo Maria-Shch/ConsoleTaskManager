@@ -8,13 +8,21 @@ import java.util.List;
 public interface Manager {
     List<Task> getListTasks();
 
-    boolean addTask(String title, String description, Date date, String contactDetails);
+    List<Task> getListScheduledTasks();
+
+    boolean addTask(String title, String description, Date date, String contactDetails) throws Exception;
 
     boolean removeTask(int indexTask);
+
+    boolean removeTask(Task task);
 
     boolean isEmptyListTasks();
 
     boolean isPresentTaskByNumber(int numberOfTask);
 
-    void saveListTaskToFile() throws Exception;
+    boolean addTaskToListScheduledTasks(Task task);
+
+    void updateNotificationDate(Task task, Date newDate);
+
+    void saveListTaskToFile();
 }
