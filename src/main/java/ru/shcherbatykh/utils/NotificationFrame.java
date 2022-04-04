@@ -121,7 +121,7 @@ public class NotificationFrame extends JFrame{
             comboBox.setFont(comboBox.getFont().deriveFont(20.0f));
 
             comboBox.addActionListener((e) -> {
-                newDate = CommandUtils.getNewDateAfterUserChoice(task.getNotificationDate(), (JComboBox) e.getSource());
+                newDate = CommandUtils.getNewDateAfterUserChoiceInComboBox(task.getNotificationDate(), (JComboBox) e.getSource());
             });
 
             bPostpone.addActionListener((e) -> {

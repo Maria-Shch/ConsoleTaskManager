@@ -67,7 +67,7 @@ public class Config {
 
                     System.out.println("Введите время новой задачи в формате чч:мм:");
                     String timeStr = CommandUtils.checkString();
-                    date = CommandUtils.getDateAfterProcessing(dateStr, timeStr);
+                    date = CommandUtils.getDateAfterProcessingUserInputInConsole(dateStr, timeStr);
                     if (date != null) {
                         date = CommandUtils.checkDateNotPassed(date);
                     }

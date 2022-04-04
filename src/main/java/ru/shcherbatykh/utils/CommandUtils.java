@@ -63,7 +63,7 @@ public class CommandUtils {
         in.close();
     }
 
-    public static Date getDateAfterProcessing(String dateStr, String timeStr) {
+    public static Date getDateAfterProcessingUserInputInConsole(String dateStr, String timeStr) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         dateFormat.setLenient(false);
         String dateAndTimeForParse = dateStr + " " + timeStr;
@@ -78,7 +78,7 @@ public class CommandUtils {
         return date;
     }
 
-    public static Date getNewDateAfterUserChoice(Date previousNotificationDate, JComboBox box) {
+    public static Date getNewDateAfterUserChoiceInComboBox(Date previousNotificationDate, JComboBox box) {
         String item = (String)box.getSelectedItem();
 
         switch(item){
