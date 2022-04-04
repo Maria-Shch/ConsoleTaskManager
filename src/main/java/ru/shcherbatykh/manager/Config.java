@@ -139,7 +139,7 @@ public class Config {
             }
             @Override
             public boolean execute(){
-                CommandUtils.exit();
+                System.exit(0);
                 return false;
             }
         };

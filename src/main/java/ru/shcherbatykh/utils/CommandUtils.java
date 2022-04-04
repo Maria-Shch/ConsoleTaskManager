@@ -59,10 +59,6 @@ public class CommandUtils {
         in.nextLine();
     }
 
-    public static void exit() {
-        in.close();
-    }
-
     public static Date getDateAfterProcessingUserInputInConsole(String dateStr, String timeStr) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         dateFormat.setLenient(false);
