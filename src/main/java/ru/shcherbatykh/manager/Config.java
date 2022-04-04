@@ -159,7 +159,18 @@ public class Config {
 
     @Bean
     public Printer getPrinter(){
-        return new PrinterImpl();
+        return tasksList -> {
+            if (tasksList.isEmpty()) System.out.println("У вас нет ни одной задачи.");
+            else {
+                int number = 1;
+                for (int i = 0; i < tasksList.size(); i++) {
+                    System.out.println(number + ". " + tasksList.get(i).getTitle() + " -- " + tasksList.get(i).getDateForPrint());
+                    System.out.println(tasksList.get(i).getDescription());
+                    System.out.println(tasksList.get(i).getContactDetails() + "\n");
+                    number++;
+                }
+            }
+        };
     }
 
     @Bean
