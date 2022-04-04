@@ -53,12 +53,6 @@ public class CommandUtils {
         }
     }
 
-    public static void waitActionFromUser() {
-        System.out.println("Нажмите Enter чтобы продолжить...");
-        in.next();
-        in.nextLine();
-    }
-
     public static Date getDateAfterProcessingUserInputInConsole(String dateStr, String timeStr) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         dateFormat.setLenient(false);

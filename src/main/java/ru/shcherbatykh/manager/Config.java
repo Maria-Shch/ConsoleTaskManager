@@ -51,7 +51,7 @@ public class Config {
             }
 
             @Override
-            public boolean execute() throws Exception {
+            public void execute() throws Exception {
                 System.out.println("Добавление задачи...");
 
                 System.out.println("Введите название новой задачи:");
@@ -79,7 +79,6 @@ public class Config {
                 if (manager.addTask(title, description, date, contactDetails)) {
                     System.out.println("Задача успешно добавлена");
                 }
-                return true;
             }
         };
     }
@@ -92,7 +91,7 @@ public class Config {
                 return "Удалить задачу";
             }
             @Override
-            public boolean execute(){
+            public void execute(){
                 if (manager.isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 } else {
@@ -110,7 +109,6 @@ public class Config {
                         System.out.println("Задачи под таким номер не существует.");
                     }
                 }
-                return true;
             }
         };
     }
@@ -123,9 +121,8 @@ public class Config {
                 return "Вывести список задач";
             }
             @Override
-            public boolean execute(){
+            public void execute(){
                 getPrinter().printListTask(manager.getListTasks());
-                return true;
             }
         };
     }
@@ -138,9 +135,8 @@ public class Config {
                 return "Выйти";
             }
             @Override
-            public boolean execute(){
+            public void execute(){
                 System.exit(0);
-                return false;
             }
         };
     }
@@ -148,6 +144,7 @@ public class Config {
     @Bean
     public StringBuilder getMenu(Manager manager){
         StringBuilder menu = new StringBuilder();
+        menu.append("\nМЕНЮ \n");
         Set<Integer> keys = getMapActions(manager).keySet();
         for (int i = 1; i <= keys.size(); i++) {
             menu.append(i + " - " + getMapActions(manager).get(i).getNameCommandOfAction() + "\n");

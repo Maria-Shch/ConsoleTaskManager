@@ -24,20 +24,15 @@ public class UserInterface {
     }
 
     public void startMenu() throws Exception {
-        boolean flag = true;
-
-        while (flag) {
+        while (true) {
             userNotificationController.run();
 
             System.out.println(menu);
             int menuSelect = CommandUtils.checkInt();
 
             Action action = actions.get(menuSelect);
-
-            if(action!=null) flag = action.execute();
+            if(action!=null) action.execute();
             else System.out.println("Такой пункт в меню отсутвствует, попробуйте снова...\n");
-
-            if (flag) CommandUtils.waitActionFromUser();
         }
     }
 }
