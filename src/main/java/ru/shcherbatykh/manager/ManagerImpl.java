@@ -29,16 +29,11 @@ import ru.shcherbatykh.models.Task;
 public class ManagerImpl implements Manager{
     @Autowired
     private List<Task> listTasks;
-    private List<Task> listScheduledTasks = new ArrayList<>();
+    private Map<Task, TimerTask> scheduledTasks = new HashMap<>();
 
     @Override
     public List<Task> getListTasks() {
         return listTasks;
-    }
-
-    @Override
-    public List<Task> getListScheduledTasks() {
-        return listScheduledTasks;
     }
 
     @Override
@@ -50,16 +45,27 @@ public class ManagerImpl implements Manager{
 
     @Override
     public boolean removeTask(int indexTask) {
-        boolean isSuccessful = listTasks.remove(indexTask) != null;
+        Task task = listTasks.remove(indexTask);
+        cancelTimerForRemovedTask(task);
         saveListTaskToFile();
-        return isSuccessful;
+        return task!=null;
     }
 
     @Override
     public boolean removeTask(Task task) {
         boolean isSuccessful = listTasks.remove(task);
+        cancelTimerForRemovedTask(task);
         saveListTaskToFile();
         return isSuccessful;
+    }
+
+    @Override
+    public Map<Task, TimerTask> getScheduledTasks(){
+        return scheduledTasks;
+    }
+
+    public void cancelTimerForRemovedTask(Task task){
+        scheduledTasks.get(task).cancel();
     }
 
     @Override
@@ -90,10 +96,5 @@ public class ManagerImpl implements Manager{
     @Override
     public boolean isPresentTaskByNumber(int numberOfTask){
         return numberOfTask <= listTasks.size() && numberOfTask > 0;
-    }
-
-    @Override
-    public boolean addTaskToListScheduledTasks(Task task) {
-        return listScheduledTasks.add(task);
     }
 }

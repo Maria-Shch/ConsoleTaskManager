@@ -22,7 +22,8 @@ public abstract class UserNotificationController {
     public void run(){
         List<Task> unscheduledTasks = manager.getListTasks()
                 .stream()
-                .filter(x -> (x.getNotificationDate().after(new Date()) && !manager.getListScheduledTasks().contains(x)))
+                .filter(x -> (x.getNotificationDate().after(new Date())
+                        && !manager.getScheduledTasks().keySet().contains(x)))
                 .collect(Collectors.toList());
 
         if(!unscheduledTasks.isEmpty()){
@@ -34,7 +35,7 @@ public abstract class UserNotificationController {
                     }
                 };
                 timer.schedule(timerTask, task.getNotificationDate());
-                manager.addTaskToListScheduledTasks(task);
+                manager.getScheduledTasks().put(task, timerTask);
             }
         }
     }
