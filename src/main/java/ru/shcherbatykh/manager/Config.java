@@ -38,7 +38,8 @@ public class Config {
         actions.put(1, printTasks(manager));
         actions.put(2, addingTask(manager));
         actions.put(3, removingTask(manager));
-        actions.put(4, exit());
+        actions.put(4, removingAllTasks(manager));
+        actions.put(5, exit());
         return actions;
     }
 
@@ -123,6 +124,25 @@ public class Config {
             @Override
             public void execute(){
                 getPrinter().printListTask(manager.getListTasks());
+            }
+        };
+    }
+
+    @Bean
+    public Action removingAllTasks(Manager manager){
+        return new Action() {
+            @Override
+            public String getNameCommandOfAction() {
+                return "Удалить все задачи";
+            }
+            @Override
+            public void execute(){
+                if (manager.isEmptyListTasks()) {
+                    System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
+                }else {
+                    manager.getListTasks().clear();
+                    System.out.println("Все задачи удалены.");
+                }
             }
         };
     }
