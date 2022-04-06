@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import ru.shcherbatykh.manager.Manager;
 import ru.shcherbatykh.manager.UserNotificationController;
 import ru.shcherbatykh.models.Task;
-
 import java.awt.*;
 import java.util.Date;
 import javax.swing.*;
@@ -36,7 +35,6 @@ public class NotificationFrame extends JFrame{
 
     public NotificationFrame(){
         super("Форма оповещения");
-        logger.debug("Создан экземпляр класса NotificationFrame");
     }
 
     public void init(Task task){
@@ -88,7 +86,7 @@ public class NotificationFrame extends JFrame{
 
         bPostpone.addActionListener((e) -> {
             dispose();
-            new PostoneTaskFrame(manager, task);
+            new PostponeTaskFrame(manager, task);
         });
 
         containerForButtons.add(bPostpone);
@@ -102,16 +100,16 @@ public class NotificationFrame extends JFrame{
         setVisible(true);
     }
 
-    private class PostoneTaskFrame extends JFrame {
+    private class PostponeTaskFrame extends JFrame {
         private final String[] items = {"Не откладывать", "Отложить на 1 минуту", "Отложить на 5 минут",
                 "Отложить на 10 минут", "Отложить на 30 минут", "Отложить на 45 минут", "Отложить на час"};
         private final JComboBox comboBox = new JComboBox(items);
         private final JButton bPostpone = new JButton("Отложить");
         private Date newDate;
 
-        public PostoneTaskFrame(Manager manager, Task task) {
+        public PostponeTaskFrame(Manager manager, Task task) {
             super("Отложить задачу '" + task.getTitle() + "'");
-            logger.debug("Создан экземпляр класса PostoneTaskFrame");
+            logger.debug("Создан экземпляр класса PostponeTaskFrame");
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             this.setBounds(200, 200, 400, 150);
             setLocationRelativeTo(null);
