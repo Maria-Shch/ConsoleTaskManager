@@ -46,8 +46,9 @@ public class Config {
         actions.put(2, printActualTasks());
         actions.put(3, addingTask());
         actions.put(4, removingTask());
-        actions.put(5, removingAllTasks());
-        actions.put(6, exit());
+        actions.put(5, removingAllTasksWithElapsedTime());
+        actions.put(6, removingAllTasks());
+        actions.put(7, exit());
         return actions;
     }
 
@@ -183,6 +184,34 @@ public class Config {
                     getManager().getListTasks().clear();
                     logger.info("All tasks was removed.");
                     System.out.println("Все задачи удалены.");
+                }
+            }
+        };
+    }
+
+    @Bean
+    public Action removingAllTasksWithElapsedTime(){
+        logger.debug("Bean 'removingAllTasksWithElapsedTime' was created.");
+        return new Action() {
+            @Override
+            public String getNameCommandOfAction() {
+                return "Удалить все задачи с прошедшим временем оповещения";
+            }
+
+            @Override
+            public void execute(){
+                if (getManager().isEmptyListTasks()) {
+                    System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
+                }else {
+                    List<Task> listTaskWithElapsedTime = getManager()
+                                    .getListTasks()
+                                    .stream()
+                                    .filter(x -> x.getNotificationDate().before(new Date()))
+                                    .collect(Collectors.toList());
+
+                    getManager().getListTasks().removeAll(listTaskWithElapsedTime);
+                    logger.info("All tasks with elapsed time was removed.");
+                    System.out.println("Все задачи с прошедшим временем оповещения удалены.");
                 }
             }
         };
