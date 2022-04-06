@@ -24,10 +24,12 @@ public abstract class UserNotificationController {
 
     public void run(){
         logger.debug("Начал работу метод run");
+        Set<Task> scheduledTasks = manager.getScheduledTasks().keySet();
+
         List<Task> unscheduledTasks = manager.getListTasks()
                 .stream()
                 .filter(x -> (x.getNotificationDate().after(new Date())
-                        && !manager.getScheduledTasks().keySet().contains(x)))
+                        && !scheduledTasks.contains(x)))
                 .collect(Collectors.toList());
 
         if(!unscheduledTasks.isEmpty()){

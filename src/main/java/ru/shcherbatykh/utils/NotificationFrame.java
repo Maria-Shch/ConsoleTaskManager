@@ -97,6 +97,7 @@ public class NotificationFrame extends JFrame{
         container.add(spContactDetails);
         container.add(containerForButtons);
 
+        setAlwaysOnTop(true);
         setVisible(true);
     }
 
@@ -137,6 +138,7 @@ public class NotificationFrame extends JFrame{
             container.add(comboBox);
             container.add(bPostpone);
 
+            setAlwaysOnTop(true);
             setVisible(true);
         }
     }

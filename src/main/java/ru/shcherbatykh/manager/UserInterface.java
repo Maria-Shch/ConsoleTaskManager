@@ -22,7 +22,6 @@ public class UserInterface {
     }
 
     public void startMenu() throws Exception {
-        logger.info("==== Запуск работы приложения ====");
         while (true) {
             userNotificationController.run();
 
