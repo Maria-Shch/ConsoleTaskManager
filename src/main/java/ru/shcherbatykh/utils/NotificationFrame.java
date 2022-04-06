@@ -39,7 +39,7 @@ public class NotificationFrame extends JFrame{
 
     public void init(Task task){
         logger.debug("Начал работу метод init");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setBounds(200, 200, 500, 300);
         setLocationRelativeTo(null);
 
@@ -111,7 +111,7 @@ public class NotificationFrame extends JFrame{
         public PostponeTaskFrame(Manager manager, Task task) {
             super("Отложить задачу '" + task.getTitle() + "'");
             logger.debug("Создан экземпляр класса PostponeTaskFrame");
-            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             this.setBounds(200, 200, 400, 150);
             setLocationRelativeTo(null);
 
