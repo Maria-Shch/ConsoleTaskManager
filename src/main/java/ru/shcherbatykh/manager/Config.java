@@ -2,6 +2,8 @@ package ru.shcherbatykh.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +42,12 @@ public class Config {
     public Map<Integer, Action> getMapActions(){
         logger.debug("Bean 'getMapActions' was created.");
         Map<Integer, Action> actions = new HashMap<>();
-        actions.put(1, printTasks());
-        actions.put(2, addingTask());
-        actions.put(3, removingTask());
-        actions.put(4, removingAllTasks());
-        actions.put(5, exit());
+        actions.put(1, printAllTasks());
+        actions.put(2, printActualTasks());
+        actions.put(3, addingTask());
+        actions.put(4, removingTask());
+        actions.put(5, removingAllTasks());
+        actions.put(6, exit());
         return actions;
     }
 
@@ -128,7 +131,7 @@ public class Config {
     }
 
     @Bean
-    public Action printTasks(){
+    public Action printAllTasks(){
         logger.debug("Bean 'printTasks' was created.");
         return new Action() {
             @Override
@@ -139,6 +142,26 @@ public class Config {
             @Override
             public void execute(){
                 getPrinter().printListTask(getManager().getListTasks());
+            }
+        };
+    }
+
+    @Bean
+    public Action printActualTasks(){
+        logger.debug("Bean 'printActualTasks' was created.");
+        return new Action() {
+            @Override
+            public String getNameCommandOfAction() {
+                return "Вывести список актуальных задач";
+            }
+
+            @Override
+            public void execute(){
+                getPrinter().printListTask(getManager()
+                        .getListTasks()
+                        .stream()
+                        .filter(x -> x.getNotificationDate().after(new Date()))
+                        .collect(Collectors.toList()));
             }
         };
     }
