@@ -114,6 +114,7 @@ public class Config {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 } else {
                     System.out.println("Удаление задачи...");
+                    getPrinter().printTitleTasks(getManager().getListTasks());
                     System.out.println("Введите номер задачи:");
                     int numberOfTask = CommandUtils.checkInt();
                     int indexOfTask = numberOfTask - 1;
@@ -250,7 +251,11 @@ public class Config {
     @Bean
     public Printer getPrinter(){
         logger.debug("Bean 'getPrinter' was created.");
-        return tasksList -> {
+
+        return new Printer() {
+            @Override
+            public void printListTask(List<Task> tasksList) {
+                logger.debug("Method 'printListTask' started working.");
             if (tasksList.isEmpty()) System.out.println("У вас нет ни одной задачи.");
             else {
                 int number = 1;
@@ -258,6 +263,17 @@ public class Config {
                     System.out.println(number + ". " + tasksList.get(i).getTitle() + " -- " + CommandUtils.getDateForPrint(tasksList.get(i).getNotificationDate()));
                     System.out.println(tasksList.get(i).getDescription());
                     System.out.println(tasksList.get(i).getContactDetails() + "\n");
+                    number++;
+                }
+            }
+            }
+
+            @Override
+            public void printTitleTasks(List<Task> tasksList) {
+                logger.debug("Method 'printTitleTasks' started working.");
+                int number = 1;
+                for (int i = 0; i < tasksList.size(); i++) {
+                    System.out.println(number + ". " + tasksList.get(i).getTitle() + " -- " + CommandUtils.getDateForPrint(tasksList.get(i).getNotificationDate()));
                     number++;
                 }
             }
