@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -36,19 +37,24 @@ public class Config {
     }
 
     @Bean
-    public Map<Integer, Action> getMapActions(Manager manager){
+    public Map<Integer, Action> getMapActions(){
         logger.debug("Bean 'getMapActions' was created.");
         Map<Integer, Action> actions = new HashMap<>();
-        actions.put(1, printTasks(manager));
-        actions.put(2, addingTask(manager));
-        actions.put(3, removingTask(manager));
-        actions.put(4, removingAllTasks(manager));
+        actions.put(1, printTasks());
+        actions.put(2, addingTask());
+        actions.put(3, removingTask());
+        actions.put(4, removingAllTasks());
         actions.put(5, exit());
         return actions;
     }
 
     @Bean
-    public Action addingTask(Manager manager) {
+    public Manager getManager(){
+        return new ManagerImpl();
+    }
+
+    @Bean
+    public Action addingTask() {
         logger.debug("Bean 'addingTask' was created.");
         return new Action() {
             @Override
@@ -82,7 +88,7 @@ public class Config {
                 System.out.println("Введите контактные данные:");
                 String contactDetails = CommandUtils.checkString();
 
-                if (manager.addTask(title, description, date, contactDetails)) {
+                if (getManager().addTask(title, description, date, contactDetails)) {
                     System.out.println("Задача успешно добавлена");
                 }
             }
@@ -90,24 +96,25 @@ public class Config {
     }
 
     @Bean
-    public Action removingTask(Manager manager){
+    public Action removingTask(){
         logger.debug("Bean 'removingTask' was created.");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
                 return "Удалить задачу";
             }
+
             @Override
             public void execute(){
-                if (manager.isEmptyListTasks()) {
+                if (getManager().isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 } else {
                     System.out.println("Удаление задачи...");
                     System.out.println("Введите номер задачи:");
                     int numberOfTask = CommandUtils.checkInt();
                     int indexOfTask = numberOfTask - 1;
-                    if (manager.isPresentTaskByNumber(numberOfTask)) {
-                        if (manager.removeTask(indexOfTask)) {
+                    if (getManager().isPresentTaskByNumber(numberOfTask)) {
+                        if (getManager().removeTask(indexOfTask)) {
                             System.out.println("Задача под номером " + numberOfTask + " успешно удалена.");
                         } else {
                             System.out.println("Что-то пошло не так.");
@@ -121,34 +128,36 @@ public class Config {
     }
 
     @Bean
-    public Action printTasks(Manager manager){
+    public Action printTasks(){
         logger.debug("Bean 'printTasks' was created.");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
                 return "Вывести список задач";
             }
+
             @Override
             public void execute(){
-                getPrinter().printListTask(manager.getListTasks());
+                getPrinter().printListTask(getManager().getListTasks());
             }
         };
     }
 
     @Bean
-    public Action removingAllTasks(Manager manager){
+    public Action removingAllTasks(){
         logger.debug("Bean 'removingAllTasks' was created.");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
                 return "Удалить все задачи";
             }
+
             @Override
             public void execute(){
-                if (manager.isEmptyListTasks()) {
+                if (getManager().isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 }else {
-                    manager.getListTasks().clear();
+                    getManager().getListTasks().clear();
                     logger.info("All tasks was removed.");
                     System.out.println("Все задачи удалены.");
                 }
@@ -173,13 +182,13 @@ public class Config {
     }
 
     @Bean
-    public StringBuilder getMenu(Manager manager){
+    public StringBuilder getMenu(){
         logger.debug("Bean 'getMenu' was created.");
         StringBuilder menu = new StringBuilder();
         menu.append("\nМЕНЮ \n");
-        Set<Integer> keys = getMapActions(manager).keySet();
+        Set<Integer> keys = getMapActions().keySet();
         for (int i = 1; i <= keys.size(); i++) {
-            menu.append(i + " - " + getMapActions(manager).get(i).getNameCommandOfAction() + "\n");
+            menu.append(i + " - " + getMapActions().get(i).getNameCommandOfAction() + "\n");
         }
         menu.append("\n");
         menu.append("Введите пункт меню:");

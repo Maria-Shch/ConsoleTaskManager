@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.shcherbatykh.models.Task;
 
-@Component
-@Qualifier
 public class ManagerImpl implements Manager{
     @Autowired
     private List<Task> listTasks;
