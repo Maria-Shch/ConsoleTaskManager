@@ -3,10 +3,8 @@ package ru.shcherbatykh.manager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -63,11 +61,13 @@ public class Config {
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
+                logger.debug("Method 'getNameCommandOfAction' of 'addingTask' bean started working.");
                 return "Добавить задачу";
             }
 
             @Override
             public void execute() throws Exception {
+                logger.debug("Method 'execute' of 'addingTask' bean started working.");
                 System.out.println("Добавление задачи...");
 
                 System.out.println("Введите название новой задачи:");
@@ -105,11 +105,13 @@ public class Config {
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
+                logger.debug("Method 'getNameCommandOfAction' of 'removingTask' bean started working.");
                 return "Удалить задачу";
             }
 
             @Override
             public void execute(){
+                logger.debug("Method 'execute' of 'removingTask' bean started working.");
                 if (getManager().isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 } else {
@@ -138,11 +140,13 @@ public class Config {
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
+                logger.debug("Method 'getNameCommandOfAction' of 'printAllTasks' bean started working.");
                 return "Вывести список задач";
             }
 
             @Override
             public void execute(){
+                logger.debug("Method 'execute' of 'printAllTasks' bean started working.");
                 getPrinter().printListTask(getManager().getListTasks());
             }
         };
@@ -154,11 +158,13 @@ public class Config {
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
+                logger.debug("Method 'getNameCommandOfAction' of 'printActualTasks' bean started working.");
                 return "Вывести список актуальных задач";
             }
 
             @Override
             public void execute(){
+                logger.debug("Method 'execute' of 'printActualTasks' bean started working.");
                 getPrinter().printListTask(getManager()
                         .getListTasks()
                         .stream()
@@ -174,11 +180,13 @@ public class Config {
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
+                logger.debug("Method 'getNameCommandOfAction' of 'removingAllTasks' bean started working.");
                 return "Удалить все задачи";
             }
 
             @Override
             public void execute(){
+                logger.debug("Method 'execute' of 'removingAllTasks' bean started working.");
                 if (getManager().isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 }else {
@@ -196,11 +204,13 @@ public class Config {
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
+                logger.debug("Method 'getNameCommandOfAction' of 'removingAllTasksWithElapsedTime' bean started working.");
                 return "Удалить все задачи с прошедшим временем оповещения";
             }
 
             @Override
             public void execute(){
+                logger.debug("Method 'execute' of 'removingAllTasksWithElapsedTime' bean started working.");
                 if (getManager().isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 }else {
@@ -224,10 +234,12 @@ public class Config {
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
+                logger.debug("Method 'getNameCommandOfAction' of 'exit' bean started working.");
                 return "Выйти";
             }
             @Override
             public void execute(){
+                logger.debug("Method 'execute' of 'exit' bean started working.");
                 logger.info("======== Application shutdown ========");
                 System.exit(0);
             }
@@ -255,7 +267,7 @@ public class Config {
         return new Printer() {
             @Override
             public void printListTask(List<Task> tasksList) {
-                logger.debug("Method 'printListTask' started working.");
+                logger.debug("Method 'printListTask' of 'getPrinter' bean started working.");
             if (tasksList.isEmpty()) System.out.println("У вас нет ни одной задачи.");
             else {
                 int number = 1;
@@ -270,7 +282,7 @@ public class Config {
 
             @Override
             public void printTitleTasks(List<Task> tasksList) {
-                logger.debug("Method 'printTitleTasks' started working.");
+                logger.debug("Method 'printTitleTasks' of 'getPrinter' started working.");
                 int number = 1;
                 for (int i = 0; i < tasksList.size(); i++) {
                     System.out.println(number + ". " + tasksList.get(i).getTitle() + " -- " + CommandUtils.getDateForPrint(tasksList.get(i).getNotificationDate()));
