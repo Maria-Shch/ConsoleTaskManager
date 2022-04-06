@@ -42,6 +42,17 @@ public class ManagerImpl implements Manager{
     }
 
     @Override
+    public void removeAllTasks() {
+        logger.debug("Method 'removeAllTasks' started working.");
+        for(Task task: listTasks){
+            if(scheduledTasks.containsKey(task)) cancelTimerForRemovedTask(task);
+        }
+        listTasks.clear();
+        logger.debug("List tasks was cleared.");
+        saveListTaskToFile();
+    }
+
+    @Override
     public boolean completeTask(Task task) {
         logger.debug("Method 'completeTask' started working.");
         boolean isSuccessful = listTasks.remove(task);

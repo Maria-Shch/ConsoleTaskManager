@@ -181,7 +181,7 @@ public class Config {
                 if (getManager().isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 }else {
-                    getManager().getListTasks().clear();
+                    getManager().removeAllTasks();
                     logger.info("All tasks was removed.");
                     System.out.println("Все задачи удалены.");
                 }

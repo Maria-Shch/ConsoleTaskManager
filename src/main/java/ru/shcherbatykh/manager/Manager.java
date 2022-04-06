@@ -14,6 +14,8 @@ public interface Manager {
 
     boolean removeTask(int indexTask);
 
+    void removeAllTasks();
+
     Map<Task, TimerTask> getScheduledTasks();
 
     boolean completeTask(Task task);
