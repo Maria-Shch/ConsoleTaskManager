@@ -1,5 +1,6 @@
 package ru.shcherbatykh.utils;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shcherbatykh.manager.Manager;
@@ -21,6 +22,7 @@ public class NotificationFrame extends JFrame{
     private final JButton bComplete = new JButton("Завершить");
     private Manager manager;
     private UserNotificationController userNotificationController;
+    private static final Logger logger = Logger.getLogger(NotificationFrame.class);
 
     @Autowired
     public void setManager(Manager manager) {
@@ -34,9 +36,11 @@ public class NotificationFrame extends JFrame{
 
     public NotificationFrame(){
         super("Форма оповещения");
+        logger.debug("Создан экземпляр класса NotificationFrame");
     }
 
     public void init(Task task){
+        logger.debug("Начал работу метод init");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBounds(200, 200, 500, 300);
         setLocationRelativeTo(null);
@@ -78,7 +82,7 @@ public class NotificationFrame extends JFrame{
 
         bComplete.addActionListener((e) -> {
             dispose();
-            manager.removeTask(task);
+            manager.completeTask(task);
             userNotificationController.run();
         });
 
@@ -107,6 +111,7 @@ public class NotificationFrame extends JFrame{
 
         public PostoneTaskFrame(Manager manager, Task task) {
             super("Отложить задачу '" + task.getTitle() + "'");
+            logger.debug("Создан экземпляр класса PostoneTaskFrame");
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             this.setBounds(200, 200, 400, 150);
             setLocationRelativeTo(null);

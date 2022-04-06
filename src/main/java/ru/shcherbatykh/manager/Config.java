@@ -2,6 +2,7 @@ package ru.shcherbatykh.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,9 +18,11 @@ import ru.shcherbatykh.utils.NotificationFrame;
 public class Config {
 
     static final String PATH = "src/main/resources/tasks.json";
+    private static final Logger logger = Logger.getLogger(Config.class);
 
     @Bean
     public List<Task> getListTasks() throws Exception {
+        logger.debug("Начал работу бин getListTasks");
         JSONObject jsonObject = (JSONObject) CommandUtils.readJsonFromFile(PATH);
         ObjectMapper objectMapper = new ObjectMapper();
         List<Task> tasks = new ArrayList<>();
@@ -34,6 +37,7 @@ public class Config {
 
     @Bean
     public Map<Integer, Action> getMapActions(Manager manager){
+        logger.debug("Начал работу бин getMapActions");
         Map<Integer, Action> actions = new HashMap<>();
         actions.put(1, printTasks(manager));
         actions.put(2, addingTask(manager));
@@ -45,6 +49,7 @@ public class Config {
 
     @Bean
     public Action addingTask(Manager manager) {
+        logger.debug("Начал работу бин addingTask");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
@@ -86,6 +91,7 @@ public class Config {
 
     @Bean
     public Action removingTask(Manager manager){
+        logger.debug("Начал работу бин removingTask");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
@@ -116,6 +122,7 @@ public class Config {
 
     @Bean
     public Action printTasks(Manager manager){
+        logger.debug("Начал работу бин printTasks");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
@@ -130,6 +137,7 @@ public class Config {
 
     @Bean
     public Action removingAllTasks(Manager manager){
+        logger.debug("Начал работу бин removingAllTasks");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
@@ -141,6 +149,7 @@ public class Config {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 }else {
                     manager.getListTasks().clear();
+                    logger.info("Все задачи удалены.");
                     System.out.println("Все задачи удалены.");
                 }
             }
@@ -149,6 +158,7 @@ public class Config {
 
     @Bean
     public Action exit(){
+        logger.debug("Начал работу бин exit");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
@@ -156,6 +166,7 @@ public class Config {
             }
             @Override
             public void execute(){
+                logger.info("=== Завершение работы приложения ===");
                 System.exit(0);
             }
         };
@@ -163,6 +174,7 @@ public class Config {
 
     @Bean
     public StringBuilder getMenu(Manager manager){
+        logger.debug("Начал работу бин getMenu");
         StringBuilder menu = new StringBuilder();
         menu.append("\nМЕНЮ \n");
         Set<Integer> keys = getMapActions(manager).keySet();
@@ -176,6 +188,7 @@ public class Config {
 
     @Bean
     public Printer getPrinter(){
+        logger.debug("Начал работу бин getPrinter");
         return tasksList -> {
             if (tasksList.isEmpty()) System.out.println("У вас нет ни одной задачи.");
             else {
@@ -193,11 +206,13 @@ public class Config {
     @Bean
     @Scope("prototype")
     public NotificationFrame notificationFrame(){
+        logger.debug("Начал работу бин notificationFrame");
         return new NotificationFrame();
     }
 
     @Bean
     public Timer getTimer(){
+        logger.debug("Начал работу бин getTimer");
         return new Timer();
     }
 }

@@ -1,5 +1,6 @@
 package ru.shcherbatykh.manager;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Component;
@@ -10,16 +11,19 @@ import java.util.stream.Collectors;
 
 @Component
 public abstract class UserNotificationController {
-    private Timer timer;
-    private Manager manager;
+    private final Timer timer;
+    private final Manager manager;
+    private static final Logger logger = Logger.getLogger(UserNotificationController.class);
 
     @Autowired
     public UserNotificationController(Timer timer, Manager manager) {
+        logger.debug("Начал работу бин UserNotificationController");
         this.timer = timer;
         this.manager = manager;
     }
 
     public void run(){
+        logger.debug("Начал работу метод run");
         List<Task> unscheduledTasks = manager.getListTasks()
                 .stream()
                 .filter(x -> (x.getNotificationDate().after(new Date())

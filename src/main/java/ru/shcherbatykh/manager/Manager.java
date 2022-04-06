@@ -16,7 +16,7 @@ public interface Manager {
 
     Map<Task, TimerTask> getScheduledTasks();
 
-    boolean removeTask(Task task);
+    boolean completeTask(Task task);
 
     boolean isEmptyListTasks();
 
