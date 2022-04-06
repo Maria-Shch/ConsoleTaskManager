@@ -1,6 +1,5 @@
 package ru.shcherbatykh.models;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Task {
@@ -32,11 +31,6 @@ public class Task {
     }
     public String getContactDetails() {
         return contactDetails;
-    }
-
-    public String getDateForPrint() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy 'в' HH:mm");
-        return dateFormat.format(notificationDate);
     }
 
     @Override

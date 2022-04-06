@@ -118,4 +118,10 @@ public class CommandUtils {
             return null;
         }
     }
+
+    public static String getDateForPrint(Date notificationDate) {
+        logger.debug("Method 'getDateForPrint' started working.");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy 'в' HH:mm (EEEE)");
+        return dateFormat.format(notificationDate);
+    }
 }

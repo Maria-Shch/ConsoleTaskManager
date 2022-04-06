@@ -255,7 +255,7 @@ public class Config {
             else {
                 int number = 1;
                 for (int i = 0; i < tasksList.size(); i++) {
-                    System.out.println(number + ". " + tasksList.get(i).getTitle() + " -- " + tasksList.get(i).getDateForPrint());
+                    System.out.println(number + ". " + tasksList.get(i).getTitle() + " -- " + CommandUtils.getDateForPrint(tasksList.get(i).getNotificationDate()));
                     System.out.println(tasksList.get(i).getDescription());
                     System.out.println(tasksList.get(i).getContactDetails() + "\n");
                     number++;
