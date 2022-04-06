@@ -17,13 +17,13 @@ public abstract class UserNotificationController {
 
     @Autowired
     public UserNotificationController(Timer timer, Manager manager) {
-        logger.debug("Начал работу бин UserNotificationController");
+        logger.debug("Bean 'UserNotificationController' was created.");
         this.timer = timer;
         this.manager = manager;
     }
 
     public void run(){
-        logger.debug("Начал работу метод run");
+        logger.debug("Method 'run' started working.");
         Set<Task> scheduledTasks = manager.getScheduledTasks().keySet();
 
         List<Task> unscheduledTasks = manager.getListTasks()

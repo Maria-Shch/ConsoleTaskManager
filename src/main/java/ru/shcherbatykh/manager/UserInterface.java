@@ -1,7 +1,6 @@
 package ru.shcherbatykh.manager;
 
 import java.util.Map;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.shcherbatykh.utils.CommandUtils;
@@ -12,7 +11,6 @@ public class UserInterface {
     private final Map<Integer, Action> actions;
     private final StringBuilder menu;
     private final UserNotificationController userNotificationController;
-    private static final Logger logger = Logger.getLogger(UserInterface.class);
 
     @Autowired
     public UserInterface(Map<Integer, Action> actions, StringBuilder menu, UserNotificationController userNotificationController) {

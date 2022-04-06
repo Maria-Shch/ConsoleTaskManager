@@ -26,18 +26,18 @@ public class ManagerImpl implements Manager{
 
     @Override
     public boolean addTask(String title, String description, Date date, String contactDetails){
-        logger.debug("Начал работу метод addTask");
+        logger.debug("Method 'addTask' started working.");
         boolean isSuccessful = listTasks.add(new Task(title, description, date, contactDetails));
         saveListTaskToFile();
-        logger.info("Добавлена новая задача: " + title);
+        logger.info("New task '" + title + "' was added.");
         return isSuccessful;
     }
 
     @Override
     public boolean removeTask(int indexTask) {
-        logger.debug("Начал работу метод removeTask");
+        logger.debug("Method 'removeTask' started working.");
         Task task = listTasks.remove(indexTask);
-        logger.info("Удалена задача: " + task.getTitle());
+        logger.info("Task '" + task.getTitle() + "' was removed.");
         if(scheduledTasks.containsKey(task)) cancelTimerForRemovedTask(task);
         saveListTaskToFile();
         return task!=null;
@@ -45,43 +45,43 @@ public class ManagerImpl implements Manager{
 
     @Override
     public boolean completeTask(Task task) {
-        logger.debug("Начал работу метод completeTask");
+        logger.debug("Method 'completeTask' started working.");
         boolean isSuccessful = listTasks.remove(task);
-        logger.info("Завершена задача: " + task.getTitle());
+        logger.info("Task '" + task.getTitle() + "' was completed.");
         saveListTaskToFile();
         return isSuccessful;
     }
 
     @Override
     public Map<Task, TimerTask> getScheduledTasks(){
-        logger.debug("Начал работу метод getScheduledTasks");
+        logger.debug("Method 'getScheduledTasks' started working.");
         return scheduledTasks;
     }
 
     public void cancelTimerForRemovedTask(Task task){
-        logger.debug("Начал работу метод cancelTimerForRemovedTask");
+        logger.debug("Method 'cancelTimerForRemovedTask' started working.");
         scheduledTasks.get(task).cancel();
-        logger.debug("Отменён timerTask для задачи " + task.getTitle());
+        logger.debug("TimerTask for the task " + task.getTitle() + " was canceled.");
     }
 
     @Override
     public boolean isEmptyListTasks(){
-        logger.debug("Начал работу метод isEmptyListTasks");
+        logger.debug("Method 'isEmptyListTasks' started working.");
         return listTasks.isEmpty();
     }
 
     @Override
     public void  updateNotificationDate(Task task, Date newDate){
-        logger.debug("Начал работу метод updateNotificationDate");
+        logger.debug("Method 'updateNotificationDate' started working.");
         listTasks.remove(task);
         listTasks.add(new Task(task.getTitle(), task.getDescription(), newDate, task.getContactDetails()));
-        logger.info("Обновлено время для задачи " + task.getTitle() + ". Предыдущее время " + task.getDateForPrint() + ". Новое время " + newDate.toString());
+        logger.info("Time for the task " + task.getTitle() + " was updated. Previous time was " + task.getNotificationDate().toString() + ". New time is " + newDate.toString());
         saveListTaskToFile();
     }
 
     @Override
     public void saveListTaskToFile(){
-        logger.debug("Начал работу метод saveListTaskToFile");
+        logger.debug("Method 'saveListTaskToFile' started working.");
         JSONObject jsonObj = new JSONObject();
         for (int i = 0; i < getListTasks().size(); i++) {
             jsonObj.put(i, getListTasks().get(i));
@@ -89,13 +89,13 @@ public class ManagerImpl implements Manager{
         try {
             Files.write(Paths.get(Config.PATH), jsonObj.toJSONString().getBytes());
         } catch (IOException ex) {
-            logger.warn("Было выброшено исключение при сохранении списка задач в файл", ex);
+            logger.warn("An exception was thrown while saving the list of tasks to a file.", ex);
         }
     }
 
     @Override
     public boolean isPresentTaskByNumber(int numberOfTask){
-        logger.debug("Начал работу метод isPresentTaskByNumber");
+        logger.debug("Method 'isPresentTaskByNumber' started working.");
         return numberOfTask <= listTasks.size() && numberOfTask > 0;
     }
 }

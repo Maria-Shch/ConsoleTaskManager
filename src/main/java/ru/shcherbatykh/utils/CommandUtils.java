@@ -18,7 +18,7 @@ public class CommandUtils {
     private static final Logger logger = Logger.getLogger(CommandUtils.class);
 
     public static int checkInt() {
-        logger.debug("Начал работу метод checkInt");
+        logger.debug("Method 'checkInt' started working.");
         int val;
         while (true) {
             if (in.hasNextInt()) {
@@ -33,7 +33,7 @@ public class CommandUtils {
     }
 
     public static String checkString() {
-        logger.debug("Начал работу метод checkString");
+        logger.debug("Method 'checkString' started working.");
         String str;
         while (true) {
             if (in.hasNext()) {
@@ -48,7 +48,7 @@ public class CommandUtils {
     }
 
     public static Date checkDateNotPassed(Date date) {
-        logger.debug("Начал работу метод checkDateNotPassed");
+        logger.debug("Method 'checkDateNotPassed' started working.");
         Date dateNow = new Date();
         if (dateNow.before(date)) {
             return date;
@@ -59,7 +59,7 @@ public class CommandUtils {
     }
 
     public static Date getDateAfterProcessingUserInputInConsole(String dateStr, String timeStr) {
-        logger.debug("Начал работу метод getDateAfterProcessingUserInputInConsole");
+        logger.debug("Method 'getDateAfterProcessingUserInputInConsole' started working.");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         dateFormat.setLenient(false);
         String dateAndTimeForParse = dateStr + " " + timeStr;
@@ -75,7 +75,7 @@ public class CommandUtils {
     }
 
     public static Date getNewDateAfterUserChoiceInComboBox(Date previousNotificationDate, JComboBox box) {
-        logger.debug("Начал работу метод getNewDateAfterUserChoiceInComboBox");
+        logger.debug("Method 'getNewDateAfterUserChoiceInComboBox' started working.");
         String item = (String)box.getSelectedItem();
 
         switch(item){
@@ -99,22 +99,22 @@ public class CommandUtils {
     }
 
     public static Object readJsonFromFile(String path) throws IOException {
-        logger.debug("Начал работу метод readJsonFromFile");
+        logger.debug("Method 'readJsonFromFile' started working.");
         FileReader reader = null;
         try {
             reader = new FileReader(path);
         } catch (FileNotFoundException ex) {
-            logger.warn("Файл " + path + " не найден. ", ex);
+            logger.warn("The file " + path + " was not found.", ex);
             File file = new File(path);
             boolean isFileCreated = file.createNewFile();
-            if(isFileCreated) logger.debug("Файл " + path + " создан.");
+            if(isFileCreated) logger.debug("The file " + path + " was created.");
         }
         reader = new FileReader(path);
         JSONParser jsonParser = new JSONParser();
         try {
             return jsonParser.parse(reader);
         } catch (ParseException ex) {
-            logger.warn("Парсинг файла " + path + " завершился неудачей. ", ex);
+            logger.warn("File parsing " + path + " failed.", ex);
             return null;
         }
     }

@@ -22,7 +22,7 @@ public class Config {
 
     @Bean
     public List<Task> getListTasks() throws Exception {
-        logger.debug("Начал работу бин getListTasks");
+        logger.debug("Bean 'getListTasks' was created.");
         JSONObject jsonObject = (JSONObject) CommandUtils.readJsonFromFile(PATH);
         ObjectMapper objectMapper = new ObjectMapper();
         List<Task> tasks = new ArrayList<>();
@@ -37,7 +37,7 @@ public class Config {
 
     @Bean
     public Map<Integer, Action> getMapActions(Manager manager){
-        logger.debug("Начал работу бин getMapActions");
+        logger.debug("Bean 'getMapActions' was created.");
         Map<Integer, Action> actions = new HashMap<>();
         actions.put(1, printTasks(manager));
         actions.put(2, addingTask(manager));
@@ -49,7 +49,7 @@ public class Config {
 
     @Bean
     public Action addingTask(Manager manager) {
-        logger.debug("Начал работу бин addingTask");
+        logger.debug("Bean 'addingTask' was created.");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
@@ -91,7 +91,7 @@ public class Config {
 
     @Bean
     public Action removingTask(Manager manager){
-        logger.debug("Начал работу бин removingTask");
+        logger.debug("Bean 'removingTask' was created.");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
@@ -122,7 +122,7 @@ public class Config {
 
     @Bean
     public Action printTasks(Manager manager){
-        logger.debug("Начал работу бин printTasks");
+        logger.debug("Bean 'printTasks' was created.");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
@@ -137,7 +137,7 @@ public class Config {
 
     @Bean
     public Action removingAllTasks(Manager manager){
-        logger.debug("Начал работу бин removingAllTasks");
+        logger.debug("Bean 'removingAllTasks' was created.");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
@@ -149,7 +149,7 @@ public class Config {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 }else {
                     manager.getListTasks().clear();
-                    logger.info("Все задачи удалены.");
+                    logger.info("All tasks was removed.");
                     System.out.println("Все задачи удалены.");
                 }
             }
@@ -158,7 +158,7 @@ public class Config {
 
     @Bean
     public Action exit(){
-        logger.debug("Начал работу бин exit");
+        logger.debug("Bean 'exit' was created.");
         return new Action() {
             @Override
             public String getNameCommandOfAction() {
@@ -166,7 +166,7 @@ public class Config {
             }
             @Override
             public void execute(){
-                logger.info("=== Завершение работы приложения ===");
+                logger.info("======== Application shutdown ========");
                 System.exit(0);
             }
         };
@@ -174,7 +174,7 @@ public class Config {
 
     @Bean
     public StringBuilder getMenu(Manager manager){
-        logger.debug("Начал работу бин getMenu");
+        logger.debug("Bean 'getMenu' was created.");
         StringBuilder menu = new StringBuilder();
         menu.append("\nМЕНЮ \n");
         Set<Integer> keys = getMapActions(manager).keySet();
@@ -188,7 +188,7 @@ public class Config {
 
     @Bean
     public Printer getPrinter(){
-        logger.debug("Начал работу бин getPrinter");
+        logger.debug("Bean 'getPrinter' was created.");
         return tasksList -> {
             if (tasksList.isEmpty()) System.out.println("У вас нет ни одной задачи.");
             else {
@@ -206,13 +206,13 @@ public class Config {
     @Bean
     @Scope("prototype")
     public NotificationFrame notificationFrame(){
-        logger.debug("Начал работу бин notificationFrame");
+        logger.debug("Bean 'notificationFrame' was created.");
         return new NotificationFrame();
     }
 
     @Bean
     public Timer getTimer(){
-        logger.debug("Начал работу бин getTimer");
+        logger.debug("Bean 'getTimer' was created.");
         return new Timer();
     }
 }
