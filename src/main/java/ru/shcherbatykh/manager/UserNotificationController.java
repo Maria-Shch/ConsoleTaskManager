@@ -9,7 +9,6 @@ import ru.shcherbatykh.utils.NotificationFrame;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
 public abstract class UserNotificationController {
     private final Timer timer;
     private final Manager manager;

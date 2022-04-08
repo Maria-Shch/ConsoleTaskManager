@@ -7,8 +7,6 @@ import java.util.*;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import ru.shcherbatykh.models.Task;
 
 public class ManagerImpl implements Manager{

@@ -51,6 +51,23 @@ public class Config {
     }
 
     @Bean
+    public UserInterface getUserInterface(){
+        logger.debug("Bean 'getUserInterface' was created.");
+        return new UserInterface(getMapActions(), getMenu(),getUserNotificationController());
+    }
+
+    @Bean
+    public UserNotificationController getUserNotificationController(){
+        logger.debug("Bean 'getUserNotificationController' was created.");
+        return new UserNotificationController(getTimer(), getManager()) {
+            @Override
+            protected NotificationFrame getNotificationFrame() {
+                return notificationFrame();
+            }
+        };
+    }
+
+    @Bean
     public Manager getManager(){
         return new ManagerImpl();
     }
@@ -66,23 +83,23 @@ public class Config {
             }
 
             @Override
-            public void execute() throws Exception {
+            public void execute(){
                 logger.debug("Method 'execute' of 'addingTask' bean started working.");
                 System.out.println("Добавление задачи...");
 
                 System.out.println("Введите название новой задачи:");
-                String title = CommandUtils.checkString();
+                String title = CommandUtils.checkString(getUserInterface());
 
                 System.out.println("Введите описание новой задачи:");
-                String description = CommandUtils.checkString();
+                String description = CommandUtils.checkString(getUserInterface());
 
                 Date date = null;
                 while (date == null) {
                     System.out.println("Введите дату новой задачи в формате дд.мм.гггг:");
-                    String dateStr = CommandUtils.checkString();
+                    String dateStr = CommandUtils.checkString(getUserInterface());
 
                     System.out.println("Введите время новой задачи в формате чч:мм:");
-                    String timeStr = CommandUtils.checkString();
+                    String timeStr = CommandUtils.checkString(getUserInterface());
                     date = CommandUtils.getDateAfterProcessingUserInputInConsole(dateStr, timeStr);
                     if (date != null) {
                         date = CommandUtils.checkDateNotPassed(date);
@@ -90,10 +107,14 @@ public class Config {
                 }
 
                 System.out.println("Введите контактные данные:");
-                String contactDetails = CommandUtils.checkString();
+                String contactDetails = CommandUtils.checkString(getUserInterface());
 
+                try {
                 if (getManager().addTask(title, description, date, contactDetails)) {
                     System.out.println("Задача успешно добавлена");
+                }
+                } catch (Exception ex) {
+                    logger.warn("Adding a new task caused an exception", ex);
                 }
             }
         };
@@ -118,7 +139,7 @@ public class Config {
                     System.out.println("Удаление задачи...");
                     getPrinter().printTitleTasks(getManager().getListTasks());
                     System.out.println("Введите номер задачи:");
-                    int numberOfTask = CommandUtils.checkInt();
+                    int numberOfTask = CommandUtils.checkInt(getUserInterface());
                     int indexOfTask = numberOfTask - 1;
                     if (getManager().isPresentTaskByNumber(numberOfTask)) {
                         if (getManager().removeTask(indexOfTask)) {

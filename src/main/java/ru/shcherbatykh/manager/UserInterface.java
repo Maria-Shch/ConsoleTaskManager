@@ -2,11 +2,9 @@ package ru.shcherbatykh.manager;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ru.shcherbatykh.utils.CommandUtils;
 
-@Component
-public class UserInterface {
+public class UserInterface implements Action{
 
     private final Map<Integer, Action> actions;
     private final StringBuilder menu;
@@ -19,16 +17,18 @@ public class UserInterface {
         this.userNotificationController = userNotificationController;
     }
 
-    public void startMenu() throws Exception {
+    @Override
+    public String getNameCommandOfAction() {
+        return "Меню";
+    }
+
+    @Override
+    public void execute(){
         while (true) {
             userNotificationController.run();
-
             System.out.println(menu);
-            int menuSelect = CommandUtils.checkInt();
-
-            Action action = actions.get(menuSelect);
-            if(action!=null) action.execute();
-            else System.out.println("Такой пункт в меню отсутвствует, попробуйте снова...\n");
+            int menuSelect = CommandUtils.checkMenuSelect(actions.size());
+            actions.get(menuSelect).execute();
         }
     }
 }

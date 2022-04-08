@@ -3,7 +3,7 @@ package ru.shcherbatykh.utils;
 import org.apache.log4j.Logger;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import ru.shcherbatykh.manager.UserNotificationController;
+import ru.shcherbatykh.manager.Action;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,18 +11,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class CommandUtils {
     private static final Scanner in = new Scanner(System.in).useDelimiter("\n");
     private static final Logger logger = Logger.getLogger(CommandUtils.class);
 
-    public static int checkInt() {
+    public static int checkInt(Action actionToExit){
         logger.debug("Method 'checkInt' started working.");
         int val;
         while (true) {
             if (in.hasNextInt()) {
                 val = in.nextInt();
+                if (Objects.equals(0,val)) actionToExit.execute();
                 break;
             } else {
                 in.nextLine();
@@ -32,12 +34,32 @@ public class CommandUtils {
         return val;
     }
 
-    public static String checkString() {
+    public static int checkMenuSelect(int countActions){
+        logger.debug("Method 'checkMenuSelect' started working.");
+        int val;
+        while (true) {
+            if (in.hasNextInt()) {
+                val = in.nextInt();
+                if(val > 0 && val <= countActions) break;
+                else{
+                    System.out.println("Такой пункт в меню отсутвствует, попробуйте снова...\n");
+                }
+            } else {
+                in.nextLine();
+                System.out.println("Требуется значение типа int, попробуйте снова...");
+            }
+        }
+        return val;
+    }
+
+    public static String checkString(Action actionToExit){
         logger.debug("Method 'checkString' started working.");
         String str;
+        System.out.println(" // Для возвращения к главному меню введите '0'");
         while (true) {
             if (in.hasNext()) {
                 str = in.next();
+                if(Objects.equals("0", str)) actionToExit.execute();
                 break;
             } else {
                 in.nextLine();
