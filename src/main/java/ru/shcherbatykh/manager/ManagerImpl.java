@@ -101,6 +101,14 @@ public class ManagerImpl implements Manager{
     }
 
     @Override
+    public void removeAllTasksWithElapsedTime(List<Task> listTaskWithElapsedTime) {
+        logger.debug("Method 'removeAllTasksWithElapsedTime' started working.");
+        listTasks.removeAll(listTaskWithElapsedTime);
+        logger.info("All tasks with elapsed time was removed.");
+        saveListTaskToFile();
+    }
+
+    @Override
     public boolean isPresentTaskByNumber(int numberOfTask){
         logger.debug("Method 'isPresentTaskByNumber' started working.");
         return numberOfTask <= listTasks.size() && numberOfTask > 0;

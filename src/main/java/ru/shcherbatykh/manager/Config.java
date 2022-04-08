@@ -241,8 +241,7 @@ public class Config {
                                     .filter(x -> x.getNotificationDate().before(new Date()))
                                     .collect(Collectors.toList());
 
-                    getManager().getListTasks().removeAll(listTaskWithElapsedTime);
-                    logger.info("All tasks with elapsed time was removed.");
+                    getManager().removeAllTasksWithElapsedTime(listTaskWithElapsedTime);
                     System.out.println("Все задачи с прошедшим временем оповещения удалены.");
                 }
             }

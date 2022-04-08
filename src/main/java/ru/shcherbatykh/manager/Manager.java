@@ -27,4 +27,6 @@ public interface Manager {
     void updateNotificationDate(Task task, Date newDate);
 
     void saveListTaskToFile();
+
+    void removeAllTasksWithElapsedTime(List<Task> listTaskWithElapsedTime);
 }
