@@ -51,7 +51,7 @@ public class Config {
     }
 
     @Bean
-    public UserInterface getUserInterface(){
+    public Action getUserInterface(){
         logger.debug("Bean 'getUserInterface' was created.");
         return new UserInterface(getMapActions(), getMenu(),getUserNotificationController());
     }

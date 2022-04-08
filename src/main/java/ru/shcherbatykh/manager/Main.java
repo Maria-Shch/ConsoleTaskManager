@@ -12,6 +12,6 @@ public class Main {
         logger.info("========= Application was started =========");
 
         ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
-        context.getBean(UserInterface.class).startMenu();
+        context.getBean(UserInterface.class).execute();
     }
 }
