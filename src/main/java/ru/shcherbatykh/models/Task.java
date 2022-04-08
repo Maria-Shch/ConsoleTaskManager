@@ -35,6 +35,16 @@ public class Task {
 
     @Override
     public String toString() {
-        return "{\"title\":\"" + title + "\", \"description\":\"" + description + "\", \"notificationDate\":\"" + notificationDate.getTime() + "\", \"contactDetails\":\"" + contactDetails + "\"}";
+        return "{\"title\":\"" + title +
+                "\", \"description\":\"" + description +
+                "\", \"notificationDate\":\"" + notificationDate.getTime() +
+                "\", \"contactDetails\":\"" + contactDetails + "\"}";
+    }
+
+    public String ToXmlString(){
+        return "<element><title>" + title + "</title>"+
+                "<description>" + description + "</description>" +
+                "<notificationDate>" + notificationDate.getTime() + "</notificationDate>" +
+                "<contactDetails>" + contactDetails + "</contactDetails></element>";
     }
 }

@@ -1,19 +1,22 @@
 package ru.shcherbatykh.manager;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shcherbatykh.models.Task;
 
 public class ManagerImpl implements Manager{
-    @Autowired
+
     private List<Task> listTasks;
+    private FileWorker fileWorker;
     private Map<Task, TimerTask> scheduledTasks = new HashMap<>();
     private static final Logger logger = Logger.getLogger(ManagerImpl.class);
+
+    @Autowired
+    public ManagerImpl(List<Task> listTasks, FileWorker fileWorker) {
+        this.listTasks = listTasks;
+        this.fileWorker = fileWorker;
+    }
 
     @Override
     public List<Task> getListTasks() {
@@ -24,7 +27,7 @@ public class ManagerImpl implements Manager{
     public boolean addTask(String title, String description, Date date, String contactDetails){
         logger.debug("Method 'addTask' started working.");
         boolean isSuccessful = listTasks.add(new Task(title, description, date, contactDetails));
-        saveListTaskToFile();
+        fileWorker.saveListTaskToFile(listTasks);
         logger.info("New task '" + title + "' was added.");
         return isSuccessful;
     }
@@ -35,7 +38,7 @@ public class ManagerImpl implements Manager{
         Task task = listTasks.remove(indexTask);
         logger.info("Task '" + task.getTitle() + "' was removed.");
         if(scheduledTasks.containsKey(task)) cancelTimerForRemovedTask(task);
-        saveListTaskToFile();
+        fileWorker.saveListTaskToFile(listTasks);
         return task!=null;
     }
 
@@ -47,7 +50,7 @@ public class ManagerImpl implements Manager{
         }
         listTasks.clear();
         logger.debug("List tasks was cleared.");
-        saveListTaskToFile();
+        fileWorker.saveListTaskToFile(listTasks);
     }
 
     @Override
@@ -55,7 +58,7 @@ public class ManagerImpl implements Manager{
         logger.debug("Method 'completeTask' started working.");
         boolean isSuccessful = listTasks.remove(task);
         logger.info("Task '" + task.getTitle() + "' was completed.");
-        saveListTaskToFile();
+        fileWorker.saveListTaskToFile(listTasks);
         return isSuccessful;
     }
 
@@ -83,21 +86,7 @@ public class ManagerImpl implements Manager{
         listTasks.remove(task);
         listTasks.add(new Task(task.getTitle(), task.getDescription(), newDate, task.getContactDetails()));
         logger.info("Time for the task " + task.getTitle() + " was updated. Previous time was " + task.getNotificationDate().toString() + ". New time is " + newDate.toString());
-        saveListTaskToFile();
-    }
-
-    @Override
-    public void saveListTaskToFile(){
-        logger.debug("Method 'saveListTaskToFile' started working.");
-        JSONObject jsonObj = new JSONObject();
-        for (int i = 0; i < getListTasks().size(); i++) {
-            jsonObj.put(i, getListTasks().get(i));
-        }
-        try {
-            Files.write(Paths.get(Config.PATH), jsonObj.toJSONString().getBytes());
-        } catch (IOException ex) {
-            logger.warn("An exception was thrown while saving the list of tasks to a file.", ex);
-        }
+        fileWorker.saveListTaskToFile(listTasks);
     }
 
     @Override
@@ -105,7 +94,7 @@ public class ManagerImpl implements Manager{
         logger.debug("Method 'removeAllTasksWithElapsedTime' started working.");
         listTasks.removeAll(listTaskWithElapsedTime);
         logger.info("All tasks with elapsed time was removed.");
-        saveListTaskToFile();
+        fileWorker.saveListTaskToFile(listTasks);
     }
 
     @Override

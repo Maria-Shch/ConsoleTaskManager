@@ -1,39 +1,37 @@
 package ru.shcherbatykh.manager;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.*;
+import org.springframework.core.env.Environment;
 import ru.shcherbatykh.models.Task;
 import ru.shcherbatykh.utils.CommandUtils;
 import ru.shcherbatykh.utils.NotificationFrame;
 
 @Configuration
 @ComponentScan(basePackages = "ru.shcherbatykh.manager")
-//@PropertySource("src/main/resources/taskManager.properties")
+@PropertySource("classpath:taskManager.properties")
 public class Config {
-
-    static final String PATH = "src/main/resources/tasks.json";
+    @Autowired
+    private Environment environment;
+    static final String PATH = "src/main/resources/";
     private static final Logger logger = Logger.getLogger(Config.class);
 
     @Bean
-    public List<Task> getListTasks() throws Exception {
-        logger.debug("Bean 'getListTasks' was created.");
-        JSONObject jsonObject = (JSONObject) CommandUtils.readJsonFromFile(PATH);
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Task> tasks = new ArrayList<>();
-        if (jsonObject != null && !jsonObject.isEmpty()) {
-            for (int i = 0; i < jsonObject.keySet().size(); i++) {
-                Task task = objectMapper.readValue(jsonObject.get(String.valueOf(i)).toString(), Task.class);
-                tasks.add(task);
-            }
+    public FileWorker getFileWorker(){
+        logger.debug("Bean 'getFileWorker' was created.");
+        if(Objects.equals("json", environment.getProperty("data.source.type")))
+            return new JsonFileWorker();
+        else
+            return new XmlFileWorker();
         }
-        return tasks;
+
+    @Bean
+    public List<Task> getListTasks(){
+        logger.debug("Bean 'getListTasks' was created.");
+        return getFileWorker().getListTasksFromFile();
     }
 
     @Bean
@@ -69,7 +67,7 @@ public class Config {
 
     @Bean
     public Manager getManager(){
-        return new ManagerImpl();
+        return new ManagerImpl(getListTasks(),getFileWorker());
     }
 
     @Bean

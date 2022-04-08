@@ -8,7 +8,7 @@ public class Main {
 
     private static final Logger logger = Logger.getLogger(Main.class);
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         logger.info("========= Application was started =========");
 
         ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
