@@ -3,29 +3,32 @@ package ru.shcherbatykh.utils;
 import org.apache.log4j.Logger;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.shcherbatykh.manager.Action;
+import ru.shcherbatykh.manager.EditingAction;
+import ru.shcherbatykh.manager.Manager;
+import ru.shcherbatykh.models.Task;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class CommandUtils {
     private static final Scanner in = new Scanner(System.in).useDelimiter("\n");
     private static final Logger logger = Logger.getLogger(CommandUtils.class);
 
-    public static int checkInt(Action actionToExit){
+    public static int checkInt(Action getMainMenu){
         logger.debug("Method 'checkInt' started working.");
         int val;
         System.out.println(" // Для возвращения к главному меню введите '0'");
         while (true) {
             if (in.hasNextInt()) {
                 val = in.nextInt();
-                if (Objects.equals(0,val)) actionToExit.execute();
+                if (Objects.equals(0,val)) getMainMenu.execute();
                 break;
             } else {
                 in.nextLine();
@@ -33,6 +36,23 @@ public class CommandUtils {
             }
         }
         return val;
+    }
+
+    public static String checkString(Action getMainMenu) {
+        logger.debug("Method 'checkString' started working.");
+        String str;
+        System.out.println(" // Для возвращения к главному меню введите '0'");
+        while (true) {
+            if (in.hasNext()) {
+                str = in.next();
+                if (Objects.equals("0", str)) getMainMenu.execute();
+                break;
+            } else {
+                in.nextLine();
+                System.out.println("Требуется String значение, попробуйте снова...");
+            }
+        }
+        return str;
     }
 
     public static int checkMenuSelect(int countActions){
@@ -51,23 +71,6 @@ public class CommandUtils {
             }
         }
         return val;
-    }
-
-    public static String checkString(Action actionToExit){
-        logger.debug("Method 'checkString' started working.");
-        String str;
-        System.out.println(" // Для возвращения к главному меню введите '0'");
-        while (true) {
-            if (in.hasNext()) {
-                str = in.next();
-                if(Objects.equals("0", str)) actionToExit.execute();
-                break;
-            } else {
-                in.nextLine();
-                System.out.println("Требуется String значение, попробуйте снова...");
-            }
-        }
-        return str;
     }
 
     public static Date checkDateNotPassed(Date date) {
@@ -146,5 +149,62 @@ public class CommandUtils {
         logger.debug("Method 'getDateForPrint' started working.");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy 'в' HH:mm (EEEE)");
         return dateFormat.format(notificationDate);
+    }
+
+    public static String getTitleFromUser(Action getMainMenu){
+        System.out.println("Введите название задачи:");
+        return CommandUtils.checkString(getMainMenu);
+    }
+
+    public static String getDescriptionFromUser(Action getMainMenu){
+        System.out.println("Введите описание задачи:");
+        return CommandUtils.checkString(getMainMenu);
+    }
+
+    public static Date getNotificationDateFromUser(Action getMainMenu){
+        Date notificationDate = null;
+        while (notificationDate == null) {
+            System.out.println("Введите дату задачи в формате дд.мм.гггг:");
+            String dateStr = CommandUtils.checkString(getMainMenu);
+
+            System.out.println("Введите время задачи в формате чч:мм:");
+            String timeStr = CommandUtils.checkString(getMainMenu);
+            notificationDate = CommandUtils.getDateAfterProcessingUserInputInConsole(dateStr, timeStr);
+            if (notificationDate != null) {
+                notificationDate = CommandUtils.checkDateNotPassed(notificationDate);
+            }
+        }
+        return notificationDate;
+    }
+
+    public static String getContactDetailsFromUser(Action getMainMenu){
+        System.out.println("Введите контактные данные:");
+        return CommandUtils.checkString(getMainMenu);
+    }
+
+    public static int getNumberOfTaskFromUser(Action getMainMenu){
+        System.out.println("Введите номер задачи:");
+        return CommandUtils.checkInt(getMainMenu);
+    }
+
+    public static String getTextMenu(Map<Integer, Action> mapActions){
+        logger.debug("Bean 'getTextMenu' was created.");
+        StringBuilder textMenu = new StringBuilder();
+        textMenu.append("\nМЕНЮ \n");
+        Set<Integer> keys = mapActions.keySet();
+        for (int i = 1; i <= keys.size(); i++) {
+            textMenu.append(i + " - " + mapActions.get(i).getNameCommandOfAction() + "\n");
+        }
+        textMenu.append("\n");
+        textMenu.append("Введите пункт меню:");
+        return textMenu.toString();
+    }
+
+    public static void editTask(EditingAction editingAction, Manager manager, Action getMainMenu){
+        int numberOfTask = CommandUtils.getNumberOfTaskFromUser(getMainMenu);
+        int indexOfTask = numberOfTask - 1;
+        Task task = manager.getListTasks().get(indexOfTask);
+        if (manager.isPresentTaskByNumber(numberOfTask)) editingAction.execute(task);
+        else System.out.println("Задачи под таким номер не существует.");
     }
 }

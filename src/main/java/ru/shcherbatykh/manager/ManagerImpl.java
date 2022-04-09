@@ -68,6 +68,7 @@ public class ManagerImpl implements Manager{
         return scheduledTasks;
     }
 
+    @Override
     public void cancelTimerForRemovedTask(Task task){
         logger.debug("Method 'cancelTimerForRemovedTask' started working.");
         scheduledTasks.get(task).cancel();

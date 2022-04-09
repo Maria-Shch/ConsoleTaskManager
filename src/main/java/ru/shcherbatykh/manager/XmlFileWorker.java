@@ -16,55 +16,52 @@ import java.util.List;
 
 public class XmlFileWorker implements FileWorker{
 
-    private final static String PATH = Config.PATH + "tasks.xml";
+    private static final String PATH = Config.PATH + "tasks.xml";
     private static final Logger logger = Logger.getLogger(XmlFileWorker.class);
 
     @Override
-    public List<Task> getListTasksFromFile() {
+    public List<Task> getListTasksFromFile() { //todo load from empty file
         logger.debug("Method 'getListTasksFromFile' started working.");
         List<Task> tasks = new ArrayList<>();
 
         File file = new File(PATH);
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        Document doc = null;
+        Document document = null;
         try {
-            doc = dbf.newDocumentBuilder().parse(file);
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
         }catch (Exception ex){
             logger.warn("Document parsing " + PATH + " failed.", ex);
         }
 
-        NodeList tasksChilds = doc.getFirstChild().getChildNodes();
-        for (int i = 0; i < tasksChilds.getLength(); i++) {
-            if(tasksChilds.item(i).getNodeType() != Node.ELEMENT_NODE) continue;
-            if(!tasksChilds.item(i).getNodeName().equals("element")) continue;
+        if(document == null) return tasks;
 
-            NodeList elementChilds = tasksChilds.item(i).getChildNodes();
+        NodeList listTagElement = document.getFirstChild().getChildNodes();
+        for (int i = 0; i < listTagElement.getLength(); i++) {
+            if(listTagElement.item(i).getNodeType() != Node.ELEMENT_NODE) continue;
+            if(!listTagElement.item(i).getNodeName().equals("element")) continue;
+
+            NodeList listTagTaskParameters = listTagElement.item(i).getChildNodes();
 
             String title ="";
             String description ="";
             Date notificationDate = new Date();
             String contactDetails ="";
 
-            for (int j = 0; j < elementChilds.getLength(); j++) {
-                if(elementChilds.item(j).getNodeType() != Node.ELEMENT_NODE) continue;
+            for (int j = 0; j < listTagTaskParameters.getLength(); j++) {
+                if(listTagTaskParameters.item(j).getNodeType() != Node.ELEMENT_NODE) continue;
 
-                switch (elementChilds.item(j).getNodeName()){
-                    case "title":{
-                        title = elementChilds.item(j).getTextContent();
+                switch (listTagTaskParameters.item(j).getNodeName()){
+                    case "title":
+                        title = listTagTaskParameters.item(j).getTextContent();
                         break;
-                    }
-                    case "description":{
-                        description = elementChilds.item(j).getTextContent();
+                    case "description":
+                        description = listTagTaskParameters.item(j).getTextContent();
                         break;
-                    }
-                    case "notificationDate":{
-                        notificationDate = new Date(Long.parseLong(elementChilds.item(j).getTextContent()));
+                    case "notificationDate":
+                        notificationDate = new Date(Long.parseLong(listTagTaskParameters.item(j).getTextContent()));
                         break;
-                    }
-                    case "contactDetails":{
-                        contactDetails = elementChilds.item(j).getTextContent();
+                    case "contactDetails":
+                        contactDetails = listTagTaskParameters.item(j).getTextContent();
                         break;
-                    }
                 }
             }
             tasks.add(new Task(title,description,notificationDate,contactDetails));
@@ -77,9 +74,9 @@ public class XmlFileWorker implements FileWorker{
         logger.debug("Method 'saveListTaskToFile' started working.");
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        builder.append("<task>");
+        builder.append("<taskList>");
         for(Task task : tasks) builder.append(task.ToXmlString());
-        builder.append("</task>");
+        builder.append("</taskList>");
         try {
             Files.write(Paths.get(PATH), builder.toString().getBytes());
         } catch (IOException ex) {

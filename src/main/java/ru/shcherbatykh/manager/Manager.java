@@ -10,7 +10,7 @@ import java.util.TimerTask;
 public interface Manager {
     List<Task> getListTasks();
 
-    boolean addTask(String title, String description, Date date, String contactDetails) throws Exception;
+    boolean addTask(String title, String description, Date date, String contactDetails);
 
     boolean removeTask(int indexTask);
 
@@ -19,6 +19,8 @@ public interface Manager {
     Map<Task, TimerTask> getScheduledTasks();
 
     boolean completeTask(Task task);
+
+    void cancelTimerForRemovedTask(Task task);
 
     boolean isEmptyListTasks();
 

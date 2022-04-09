@@ -4,16 +4,16 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shcherbatykh.utils.CommandUtils;
 
-public class UserInterface implements Action{
+public class MainMenu implements Action{
 
     private final Map<Integer, Action> actions;
-    private final StringBuilder menu;
+    private final String textMenu;
     private final UserNotificationController userNotificationController;
 
     @Autowired
-    public UserInterface(Map<Integer, Action> actions, StringBuilder menu, UserNotificationController userNotificationController) {
+    public MainMenu(Map<Integer, Action> actions, String textMenu, UserNotificationController userNotificationController) {
         this.actions = actions;
-        this.menu = menu;
+        this.textMenu = textMenu;
         this.userNotificationController = userNotificationController;
     }
 
@@ -26,7 +26,7 @@ public class UserInterface implements Action{
     public void execute(){
         while (true) {
             userNotificationController.run();
-            System.out.println(menu);
+            System.out.println(textMenu);
             int menuSelect = CommandUtils.checkMenuSelect(actions.size());
             actions.get(menuSelect).execute();
         }

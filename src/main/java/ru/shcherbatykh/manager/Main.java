@@ -10,8 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         logger.info("========= Application was started =========");
-
         ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
-        context.getBean(UserInterface.class).execute();
+        context.getBean(MainMenu.class).execute();
     }
 }
