@@ -24,7 +24,13 @@ public interface Manager {
 
     boolean isPresentTaskByNumber(int numberOfTask);
 
+    void updateTitle(Task task, String newTitle);
+
+    void updateDescription(Task task, String newDescription);
+
     void updateNotificationDate(Task task, Date newDate);
+
+    void updateContactDetails(Task task, String newContactDetails);
 
     void removeAllTasksWithElapsedTime(List<Task> listTaskWithElapsedTime);
 }

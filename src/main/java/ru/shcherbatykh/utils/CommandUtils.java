@@ -21,6 +21,7 @@ public class CommandUtils {
     public static int checkInt(Action actionToExit){
         logger.debug("Method 'checkInt' started working.");
         int val;
+        System.out.println(" // Для возвращения к главному меню введите '0'");
         while (true) {
             if (in.hasNextInt()) {
                 val = in.nextInt();

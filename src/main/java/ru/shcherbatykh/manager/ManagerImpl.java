@@ -81,11 +81,46 @@ public class ManagerImpl implements Manager{
     }
 
     @Override
+    public void updateTitle(Task task, String newTitle) {
+        logger.debug("Method 'updateTitle' started working.");
+        listTasks.remove(task);
+        listTasks.add(new Task(newTitle, task.getDescription(), task.getNotificationDate(), task.getContactDetails()));
+        logger.info("Title for the task " + newTitle + " was updated. " +
+                "Previous title was " + task.getTitle() + ". " +
+                "New title is " + newTitle);
+        fileWorker.saveListTaskToFile(listTasks);
+    }
+
+    @Override
+    public void updateDescription(Task task, String newDescription) {
+        logger.debug("Method 'updateDescription' started working.");
+        listTasks.remove(task);
+        listTasks.add(new Task(task.getTitle(), newDescription, task.getNotificationDate(), task.getContactDetails()));
+        logger.info("Description for the task " + task.getTitle() + " was updated. " +
+                "Previous description was " + task.getDescription() + ". " +
+                "New description is " + newDescription);
+        fileWorker.saveListTaskToFile(listTasks);
+    }
+
+    @Override
     public void  updateNotificationDate(Task task, Date newDate){
         logger.debug("Method 'updateNotificationDate' started working.");
         listTasks.remove(task);
         listTasks.add(new Task(task.getTitle(), task.getDescription(), newDate, task.getContactDetails()));
-        logger.info("Time for the task " + task.getTitle() + " was updated. Previous time was " + task.getNotificationDate().toString() + ". New time is " + newDate.toString());
+        logger.info("Time for the task " + task.getTitle() + " was updated. " +
+                "Previous time was " + task.getNotificationDate().toString() + ". " +
+                "New time is " + newDate.toString());
+        fileWorker.saveListTaskToFile(listTasks);
+    }
+
+    @Override
+    public void updateContactDetails(Task task, String newContactDetails) {
+        logger.debug("Method 'updateContactDetails' started working.");
+        listTasks.remove(task);
+        listTasks.add(new Task(task.getTitle(), task.getDescription(), task.getNotificationDate(), newContactDetails));
+        logger.info("Contact details for the task " + task.getTitle() + " was updated. " +
+                "Previous contact details were " + task.getContactDetails() + ". " +
+                "New contact details are " + newContactDetails);
         fileWorker.saveListTaskToFile(listTasks);
     }
 

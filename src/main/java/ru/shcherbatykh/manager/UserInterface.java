@@ -19,7 +19,7 @@ public class UserInterface implements Action{
 
     @Override
     public String getNameCommandOfAction() {
-        return "Меню";
+        return "Главное меню";
     }
 
     @Override
