@@ -4,16 +4,17 @@ import java.util.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.shcherbatykh.models.Task;
+import ru.shcherbatykh.utils.FileWorker;
 
-public class ManagerImpl implements Manager{
+public class TaskRepoImpl implements TaskRepo {
 
     private List<Task> listTasks;
     private FileWorker fileWorker;
     private Map<Task, TimerTask> scheduledTasks = new HashMap<>();
-    private static final Logger logger = Logger.getLogger(ManagerImpl.class);
+    private static final Logger logger = Logger.getLogger(TaskRepoImpl.class);
 
     @Autowired
-    public ManagerImpl(List<Task> listTasks, FileWorker fileWorker) {
+    public TaskRepoImpl(List<Task> listTasks, FileWorker fileWorker) {
         this.listTasks = listTasks;
         this.fileWorker = fileWorker;
     }

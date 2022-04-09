@@ -1,4 +1,4 @@
-package ru.shcherbatykh.manager;
+package ru.shcherbatykh.utils;
 
 import ru.shcherbatykh.models.Task;
 import java.util.List;

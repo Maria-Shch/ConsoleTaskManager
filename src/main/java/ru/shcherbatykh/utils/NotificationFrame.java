@@ -2,8 +2,7 @@ package ru.shcherbatykh.utils;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import ru.shcherbatykh.manager.Manager;
+import ru.shcherbatykh.manager.TaskRepo;
 import ru.shcherbatykh.manager.UserNotificationController;
 import ru.shcherbatykh.models.Task;
 import java.awt.*;
@@ -11,7 +10,6 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-@Component
 public class NotificationFrame extends JFrame{
 
     private JLabel lTitle;
@@ -19,13 +17,13 @@ public class NotificationFrame extends JFrame{
     private JTextArea taContactDetailsTask;
     private final JButton bPostpone  = new JButton("Отложить");
     private final JButton bComplete = new JButton("Завершить");
-    private Manager manager;
+    private TaskRepo taskRepo;
     private UserNotificationController userNotificationController;
     private static final Logger logger = Logger.getLogger(NotificationFrame.class);
 
     @Autowired
-    public void setManager(Manager manager) {
-        this.manager = manager;
+    public void setManager(TaskRepo taskRepo) {
+        this.taskRepo = taskRepo;
     }
 
     @Autowired
@@ -80,13 +78,13 @@ public class NotificationFrame extends JFrame{
 
         bComplete.addActionListener((e) -> {
             dispose();
-            manager.completeTask(task);
+            taskRepo.completeTask(task);
             userNotificationController.run();
         });
 
         bPostpone.addActionListener((e) -> {
             dispose();
-            new PostponeTaskFrame(manager, task);
+            new PostponeTaskFrame(taskRepo, task);
         });
 
         containerForButtons.add(bPostpone);
@@ -108,7 +106,7 @@ public class NotificationFrame extends JFrame{
         private final JButton bPostpone = new JButton("Отложить");
         private Date newDate;
 
-        public PostponeTaskFrame(Manager manager, Task task) {
+        public PostponeTaskFrame(TaskRepo taskRepo, Task task) {
             super("Отложить задачу '" + task.getTitle() + "'");
             logger.debug("Instance of the class was created.");
             this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -130,8 +128,8 @@ public class NotificationFrame extends JFrame{
 
             bPostpone.addActionListener((e) -> {
                 dispose();
-                if (newDate == null) manager.updateNotificationDate(task, task.getNotificationDate());
-                else manager.updateNotificationDate(task, newDate);
+                if (newDate == null) taskRepo.updateNotificationDate(task, task.getNotificationDate());
+                else taskRepo.updateNotificationDate(task, newDate);
                 userNotificationController.run();
             });
 

@@ -1,9 +1,10 @@
-package ru.shcherbatykh.manager;
+package ru.shcherbatykh.utils;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import ru.shcherbatykh.manager.Config;
 import ru.shcherbatykh.models.Task;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class XmlFileWorker implements FileWorker{
+public class XmlFileWorker implements FileWorker {
 
     private static final String PATH = Config.PATH + "tasks.xml";
     private static final Logger logger = Logger.getLogger(XmlFileWorker.class);

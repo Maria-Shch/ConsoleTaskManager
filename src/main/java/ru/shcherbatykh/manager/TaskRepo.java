@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
 
-public interface Manager {
+public interface TaskRepo {
     List<Task> getListTasks();
 
     boolean addTask(String title, String description, Date date, String contactDetails);

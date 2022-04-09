@@ -3,10 +3,9 @@ package ru.shcherbatykh.utils;
 import org.apache.log4j.Logger;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.shcherbatykh.manager.Action;
 import ru.shcherbatykh.manager.EditingAction;
-import ru.shcherbatykh.manager.Manager;
+import ru.shcherbatykh.manager.TaskRepo;
 import ru.shcherbatykh.models.Task;
 
 import javax.swing.*;
@@ -200,11 +199,11 @@ public class CommandUtils {
         return textMenu.toString();
     }
 
-    public static void editTask(EditingAction editingAction, Manager manager, Action getMainMenu){
+    public static void editTask(EditingAction editingAction, TaskRepo taskRepo, Action getMainMenu){
         int numberOfTask = CommandUtils.getNumberOfTaskFromUser(getMainMenu);
         int indexOfTask = numberOfTask - 1;
-        Task task = manager.getListTasks().get(indexOfTask);
-        if (manager.isPresentTaskByNumber(numberOfTask)) editingAction.execute(task);
+        Task task = taskRepo.getListTasks().get(indexOfTask);
+        if (taskRepo.isPresentTaskByNumber(numberOfTask)) editingAction.execute(task);
         else System.out.println("Задачи под таким номер не существует.");
     }
 }

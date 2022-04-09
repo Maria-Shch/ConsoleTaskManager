@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import ru.shcherbatykh.models.Task;
-import ru.shcherbatykh.utils.CommandUtils;
-import ru.shcherbatykh.utils.NotificationFrame;
+import ru.shcherbatykh.utils.*;
+
+//todo readme
 
 @Configuration
 @ComponentScan(basePackages = "ru.shcherbatykh.manager")
@@ -17,7 +18,7 @@ public class Config {
 
     @Autowired
     private Environment environment;
-    static final String PATH = "src/main/resources/";
+    public static final String PATH = "src/main/resources/";
     private static final Logger logger = Logger.getLogger(Config.class);
 
     @Bean
@@ -71,7 +72,7 @@ public class Config {
     @Bean
     public UserNotificationController getUserNotificationController(){
         logger.debug("Bean 'getUserNotificationController' was created.");
-        return new UserNotificationController(getTimer(), getManager()) {
+        return new UserNotificationController(getTimer(), getTaskRepo()) {
             @Override
             protected NotificationFrame getNotificationFrame() {
                 return notificationFrame();
@@ -80,9 +81,9 @@ public class Config {
     }
 
     @Bean
-    public Manager getManager(){
-        logger.debug("Bean 'getManager' was created.");
-        return new ManagerImpl(getListTasks(), getFileWorker());
+    public TaskRepo getTaskRepo(){
+        logger.debug("Bean 'getTaskRepo' was created.");
+        return new TaskRepoImpl(getListTasks(), getFileWorker());
     }
 
     @Bean
@@ -105,7 +106,7 @@ public class Config {
                 Date notificationDate = CommandUtils.getNotificationDateFromUser((getMainMenu()));
                 String contactDetails = CommandUtils.getContactDetailsFromUser(getMainMenu());
 
-                getManager().addTask(title, description, notificationDate, contactDetails);
+                getTaskRepo().addTask(title, description, notificationDate, contactDetails);
                 System.out.println("Задача успешно добавлена");
             }
         };
@@ -125,12 +126,12 @@ public class Config {
             public void execute(){
                 logger.debug("Method 'execute' of 'editingTask' bean started working.");
 
-                if (getManager().isEmptyListTasks()) {
+                if (getTaskRepo().isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего редактировать.");
                 }
                 else {
                     System.out.println("Редактирование задачи...\n" + "Список задач:");
-                    getPrinter().printTitleTasks(getManager().getListTasks());
+                    getPrinter().printTitleTasks(getTaskRepo().getListTasks());
                     System.out.println("\n" + getTextEditingMenu());
                     int menuSelect = CommandUtils.checkMenuSelect(getMapEditingActions().size());
                     getMapEditingActions().get(menuSelect).execute();
@@ -152,16 +153,16 @@ public class Config {
             @Override
             public void execute(){
                 logger.debug("Method 'execute' of 'removingTask' bean started working.");
-                if (getManager().isEmptyListTasks()) {
+                if (getTaskRepo().isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 } else {
                     System.out.println("Удаление задачи...");
-                    getPrinter().printTitleTasks(getManager().getListTasks());
+                    getPrinter().printTitleTasks(getTaskRepo().getListTasks());
                     int numberOfTask = CommandUtils.getNumberOfTaskFromUser(getMainMenu());
                     int indexOfTask = numberOfTask - 1;
 
-                    if (getManager().isPresentTaskByNumber(numberOfTask)) {
-                        getManager().removeTask(indexOfTask);
+                    if (getTaskRepo().isPresentTaskByNumber(numberOfTask)) {
+                        getTaskRepo().removeTask(indexOfTask);
                         System.out.println("Задача под номером " + numberOfTask + " успешно удалена.");
                     } else {
                         System.out.println("Задачи под таким номер не существует.");
@@ -184,7 +185,7 @@ public class Config {
             @Override
             public void execute(){
                 logger.debug("Method 'execute' of 'printAllTasks' bean started working.");
-                getPrinter().printListTask(getManager().getListTasks());
+                getPrinter().printListTask(getTaskRepo().getListTasks());
             }
         };
     }
@@ -203,7 +204,7 @@ public class Config {
             public void execute(){
                 logger.debug("Method 'execute' of 'printActualTasks' bean started working.");
                 getPrinter().printListTask(
-                         getManager()
+                        getTaskRepo()
                         .getListTasks()
                         .stream()
                         .filter(x -> x.getNotificationDate().after(new Date()))
@@ -226,10 +227,10 @@ public class Config {
             @Override
             public void execute(){
                 logger.debug("Method 'execute' of 'removingAllTasks' bean started working.");
-                if (getManager().isEmptyListTasks()) {
+                if (getTaskRepo().isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 } else {
-                    getManager().removeAllTasks();
+                    getTaskRepo().removeAllTasks();
                     logger.info("All tasks was removed.");
                     System.out.println("Все задачи удалены.");
                 }
@@ -250,16 +251,16 @@ public class Config {
             @Override
             public void execute(){
                 logger.debug("Method 'execute' of 'removingAllTasksWithElapsedTime' bean started working.");
-                if (getManager().isEmptyListTasks()) {
+                if (getTaskRepo().isEmptyListTasks()) {
                     System.out.println("Ваш список задач пуст, вы не можете ничего удалить.");
                 } else {
-                    List<Task> listTaskWithElapsedTime = getManager()
+                    List<Task> listTaskWithElapsedTime = getTaskRepo()
                                     .getListTasks()
                                     .stream()
                                     .filter(x -> x.getNotificationDate().before(new Date()))
                                     .collect(Collectors.toList());
 
-                    getManager().removeAllTasksWithElapsedTime(listTaskWithElapsedTime);
+                    getTaskRepo().removeAllTasksWithElapsedTime(listTaskWithElapsedTime);
                     System.out.println("Все задачи с прошедшим временем оповещения удалены.");
                 }
             }
@@ -298,10 +299,10 @@ public class Config {
                 logger.debug("Method 'execute' of 'editTitleTask' bean started working.");
                 EditingAction editingAction = (Task task) -> {
                     String newTitle = CommandUtils.getTitleFromUser(getMainMenu());
-                    getManager().updateTitle(task, newTitle);
+                    getTaskRepo().updateTitle(task, newTitle);
                     System.out.println("Название задачи успешно изменено с '" + task.getTitle() + "' на '" + newTitle + "'." );
                 };
-                CommandUtils.editTask(editingAction, getManager(), getMainMenu());
+                CommandUtils.editTask(editingAction, getTaskRepo(), getMainMenu());
             }
         };
     }
@@ -320,10 +321,10 @@ public class Config {
                 logger.debug("Method 'execute' of 'editDescriptionTask' bean started working.");
                 EditingAction editingAction = (Task task) -> {
                     String newDescription = CommandUtils.getDescriptionFromUser(getMainMenu());
-                    getManager().updateDescription(task, newDescription);
+                    getTaskRepo().updateDescription(task, newDescription);
                     System.out.println("Описание задачи успешно изменено с '" + task.getDescription() + "' на '" + newDescription + "'." );
                 };
-                CommandUtils.editTask(editingAction, getManager(), getMainMenu());
+                CommandUtils.editTask(editingAction, getTaskRepo(), getMainMenu());
             }
         };
     }
@@ -342,13 +343,13 @@ public class Config {
                 logger.debug("Method 'execute' of 'editNotificationDateTask' bean started working.");
                 EditingAction editingAction = (Task task) -> {
                     Date newDate = CommandUtils.getNotificationDateFromUser(getMainMenu());
-                    getManager().updateNotificationDate(task, newDate);
+                    getTaskRepo().updateNotificationDate(task, newDate);
                     System.out.println("дата и время задачи успешно изменено с '"
                             + CommandUtils.getDateForPrint(task.getNotificationDate())
                             + "' на '"
                             + CommandUtils.getDateForPrint(newDate) + "'." );
                 };
-                CommandUtils.editTask(editingAction, getManager(), getMainMenu());
+                CommandUtils.editTask(editingAction, getTaskRepo(), getMainMenu());
             }
         };
     }
@@ -367,11 +368,11 @@ public class Config {
                 logger.debug("Method 'execute' of 'editContactDetailsTask' bean started working.");
                 EditingAction editingAction = (Task task) -> {
                     String newContactDetails = CommandUtils.getContactDetailsFromUser(getMainMenu());
-                    getManager().updateContactDetails(task, newContactDetails);
+                    getTaskRepo().updateContactDetails(task, newContactDetails);
                     System.out.println("Контактные данные задачи успешно изменено с '" +
                             task.getContactDetails() + "' на '" + newContactDetails + "'." );
                 };
-                CommandUtils.editTask(editingAction, getManager(), getMainMenu());
+                CommandUtils.editTask(editingAction, getTaskRepo(), getMainMenu());
             }
         };
     }
