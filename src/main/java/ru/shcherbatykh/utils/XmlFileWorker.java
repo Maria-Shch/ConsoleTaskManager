@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import ru.shcherbatykh.manager.Config;
 import ru.shcherbatykh.models.Task;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,6 +27,8 @@ public class XmlFileWorker implements FileWorker {
         List<Task> tasks = new ArrayList<>();
 
         File file = new File(PATH);
+        if(file.length() == 0) return tasks;
+
         Document document = null;
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);

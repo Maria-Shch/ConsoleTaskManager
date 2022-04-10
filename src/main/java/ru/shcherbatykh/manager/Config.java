@@ -9,8 +9,6 @@ import org.springframework.core.env.Environment;
 import ru.shcherbatykh.models.Task;
 import ru.shcherbatykh.utils.*;
 
-//todo readme
-
 @Configuration
 @ComponentScan(basePackages = "ru.shcherbatykh.manager")
 @PropertySource("classpath:taskManager.properties")
@@ -132,7 +130,7 @@ public class Config {
                 else {
                     System.out.println("Редактирование задачи...\n" + "Список задач:");
                     getPrinter().printTitleTasks(getTaskRepo().getListTasks());
-                    System.out.println("\n" + getTextEditingMenu());
+                    System.out.println(getTextEditingMenu());
                     int menuSelect = CommandUtils.checkMenuSelect(getMapEditingActions().size());
                     getMapEditingActions().get(menuSelect).execute();
                 }

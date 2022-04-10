@@ -8,7 +8,6 @@ import ru.shcherbatykh.models.Task;
 import java.awt.*;
 import java.util.Date;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 public class NotificationFrame extends JFrame{
 
@@ -22,7 +21,7 @@ public class NotificationFrame extends JFrame{
     private static final Logger logger = Logger.getLogger(NotificationFrame.class);
 
     @Autowired
-    public void setManager(TaskRepo taskRepo) {
+    public void setTaskRepo(TaskRepo taskRepo) {
         this.taskRepo = taskRepo;
     }
 
@@ -37,38 +36,25 @@ public class NotificationFrame extends JFrame{
 
     public void init(Task task){
         logger.debug("Method 'init' started working.");
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setBounds(200, 200, 500, 300);
-        setLocationRelativeTo(null);
+        setBounds(200, 200, 500, 300);
 
         Container container = this.getContentPane();
         container.setLayout(new GridLayout(4, 1));
 
         Container containerForButtons = new Container();
         containerForButtons.setLayout(new GridLayout(1, 2));
-        containerForButtons.setVisible(true);
 
         lTitle = new JLabel("У вас запланирована задача: " + task.getTitle());
         taDescriptionTask = new JTextArea(task.getDescription());
         taContactDetailsTask = new JTextArea(task.getContactDetails());
 
-        lTitle.setBorder(new EmptyBorder(5, 5, 5, 5));
-        taDescriptionTask.setBorder(new EmptyBorder(5, 5, 5, 5));
-        taContactDetailsTask.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-        lTitle.setFont(lTitle.getFont().deriveFont(20.0f));
-        taDescriptionTask.setFont(taDescriptionTask.getFont().deriveFont(18.0f));
-        taContactDetailsTask.setFont(taDescriptionTask.getFont().deriveFont(16.0f));
-        bPostpone.setFont(bPostpone.getFont().deriveFont(20.0f));
-        bComplete.setFont(bComplete.getFont().deriveFont(20.0f));
-
-        taDescriptionTask.setWrapStyleWord(true);
-        taDescriptionTask.setLineWrap(true);
-        taContactDetailsTask.setWrapStyleWord(true);
-        taContactDetailsTask.setLineWrap(true);
-
-        taDescriptionTask.setEditable(false);
-        taContactDetailsTask.setEditable(false);
+        SwingCommandUtils.setBorderElements(lTitle, taDescriptionTask, taContactDetailsTask);
+        SwingCommandUtils.setFontElements(20.0f, lTitle, bPostpone, bComplete);
+        SwingCommandUtils.setFontElements(18.0f, taDescriptionTask);
+        SwingCommandUtils.setFontElements(16.0f, taContactDetailsTask);
+        SwingCommandUtils.setWrapStyleWordTrue(taDescriptionTask, taContactDetailsTask);
+        SwingCommandUtils.setLineWrapTrue(taDescriptionTask, taContactDetailsTask);
+        SwingCommandUtils.setEditableFalse(taDescriptionTask, taContactDetailsTask);
 
         JScrollPane spDescriptionTask = new JScrollPane(taDescriptionTask);
         JScrollPane spContactDetails = new JScrollPane(taContactDetailsTask);
@@ -87,16 +73,9 @@ public class NotificationFrame extends JFrame{
             new PostponeTaskFrame(taskRepo, task);
         });
 
-        containerForButtons.add(bPostpone);
-        containerForButtons.add(bComplete);
-
-        container.add(lTitle);
-        container.add(spDescriptionTask);
-        container.add(spContactDetails);
-        container.add(containerForButtons);
-
-        setAlwaysOnTop(true);
-        setVisible(true);
+        SwingCommandUtils.addElementsToContainer(containerForButtons, bPostpone, bComplete);
+        SwingCommandUtils.addElementsToContainer(container, lTitle, spDescriptionTask, spContactDetails, containerForButtons);
+        SwingCommandUtils.setBasicParametersForFrame(this);
     }
 
     private class PostponeTaskFrame extends JFrame {
@@ -109,21 +88,20 @@ public class NotificationFrame extends JFrame{
         public PostponeTaskFrame(TaskRepo taskRepo, Task task) {
             super("Отложить задачу '" + task.getTitle() + "'");
             logger.debug("Instance of the class was created.");
-            this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            this.setBounds(200, 200, 400, 150);
-            setLocationRelativeTo(null);
+
+            setBounds(200, 200, 400, 150);
 
             Container container = this.getContentPane();
             container.setLayout(new GridLayout(2, 1));
 
-            comboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
-            bPostpone.setFont(bPostpone.getFont().deriveFont(20.0f));
+            SwingCommandUtils.setBorderElements(comboBox);
+            SwingCommandUtils.setFontElements(20.0f, bPostpone, comboBox);
+
             bPostpone.setBackground(new java.awt.Color(240, 210, 105));
 
-            comboBox.setFont(comboBox.getFont().deriveFont(20.0f));
-
             comboBox.addActionListener((e) -> {
-                newDate = CommandUtils.getNewDateAfterUserChoiceInComboBox(task.getNotificationDate(), (JComboBox) e.getSource());
+                newDate = CommandUtils.getNewDateAfterUserChoiceInComboBox(task.getNotificationDate(),
+                        (JComboBox) e.getSource());
             });
 
             bPostpone.addActionListener((e) -> {
@@ -133,11 +111,8 @@ public class NotificationFrame extends JFrame{
                 userNotificationController.run();
             });
 
-            container.add(comboBox);
-            container.add(bPostpone);
-
-            setAlwaysOnTop(true);
-            setVisible(true);
+            SwingCommandUtils.addElementsToContainer(container, comboBox, bPostpone);
+            SwingCommandUtils.setBasicParametersForFrame(this);
         }
     }
 }
